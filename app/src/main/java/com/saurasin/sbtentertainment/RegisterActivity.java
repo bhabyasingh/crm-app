@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +26,16 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -91,14 +97,14 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-                getChildonedobET.setText(String.format("%d/%d/%d", dayOfMonth, monthOfYear, year));
+                getChildonedobET.setText(String.format("%d/%d/%d", dayOfMonth, monthOfYear+1, year));
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
         final DatePickerDialog childTwoDOB = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                getChildtwodobET.setText(String.format("%d/%d/%d", dayOfMonth, monthOfYear, year));
+                getChildtwodobET.setText(String.format("%d/%d/%d", dayOfMonth, monthOfYear+1, year));
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
         
@@ -120,9 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
         
         mobileNumberFromIntent = getIntent().getStringExtra(MOBILE_INTENT_EXTRA);
-        Toast.makeText(this,
-                "MobileNumber::" + mobileNumberFromIntent,
-                Toast.LENGTH_LONG).show();
     }
     
     
@@ -213,13 +216,35 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     backend.addEntry(entry);
                 }
-                new SmsSenderTask(this, "Processing ...").execute(phone, name);
+                new SmsSenderTask(this, "Processing ...").execute(phone, createMessage(entry));
             }
         } else {
             Toast.makeText(this,
                     getResources().getText(R.string.terms_not_accepted),
                     Toast.LENGTH_LONG).show();
         }
+    }
+    
+    private String createMessage(final Entry entry) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Welcome to Awesome Place - ");
+        stringBuilder.append(entry.getName());
+        List<ChildEntry> ce =  entry.getChildren();
+        for (int i = 0; i < ce.size(); i++) {
+            stringBuilder.append("," + ce.get(i).getName());
+        }
+        
+        SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd.MM.yyyy 'at' HH:mm:ss");
+        dateFormatter.setTimeZone(TimeZone.getDefault());
+        stringBuilder.append(". Emergency - ");
+        stringBuilder.append(entry.getPhone());
+        stringBuilder.append(". Time - ");
+        stringBuilder.append(dateFormatter.format(new Date()));
+        stringBuilder.append(". PLEASE REMOVE PHONE FROM SILENT AND STAY ALERT. THANK YOU.");
+        stringBuilder.append(" Buy one membership, use multiple locations - ");
+        stringBuilder.append("Elements Mall Nagawara, Forum Mall Whitefield.");
+        String message = stringBuilder.toString();
+        return message;
     }
     
     @Override

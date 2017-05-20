@@ -14,13 +14,13 @@ import java.net.URLEncoder;
 
 public class SmsSender {
     
-    public static String sendSms(final String phoneNumber, final String name) {
+    public static String sendSms(final String message, final String phoneNumber) {
         try
         {
 // Construct data
             String data="user=" + URLEncoder.encode("udayjose", "UTF-8");
             data +="&password=" + URLEncoder.encode("Welcome123!", "UTF-8");
-            data +="&message=" + URLEncoder.encode("Thank you for visiting SBTEntertainment - " + name, "UTF-8");
+            data +="&message=" + URLEncoder.encode(message, "UTF-8");
             data +="&sender=" + URLEncoder.encode("AWSPLC", "UTF-8");
             data +="&mobile=" + URLEncoder.encode(phoneNumber, "UTF-8");
             data +="&type=" + URLEncoder.encode("3", "UTF-8");

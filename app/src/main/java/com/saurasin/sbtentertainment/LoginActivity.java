@@ -11,6 +11,7 @@ import com.saurasin.sbtentertainment.backend.utils.LeadConstants;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -40,6 +41,10 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     private TextView mEmailView;
     private EditText mPasswordView;
     private Spinner locationSpinner;
+    private SharedPreferences  mPrefs;
+    
+    private static final String PREF_USER_EMAIL = "useremail";
+    private static final String PREF_INVALID_USER_EMAIL = "Invalid";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +74,18 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         });
 
         initializeSpinner();
+        mPrefs = getPreferences(MODE_PRIVATE);
+        final String userEmail = mPrefs.getString(PREF_USER_EMAIL, PREF_INVALID_USER_EMAIL);
+        if (!PREF_INVALID_USER_EMAIL.equals(userEmail)) {
+            mEmailView.setText(userEmail);
+        }
     }
     
     private void initializeSpinner() {
         locationSpinner = (Spinner) findViewById(R.id.location_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.location_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
+                R.array.location_array, R.layout.spinner_layout);
+        adapter.setDropDownViewResource(R.layout.spinner_layout);
         locationSpinner.setAdapter(adapter);
         locationSpinner.setOnItemSelectedListener(this);
     }
@@ -100,6 +108,9 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             result = false;
         }
         if (result) {
+            SharedPreferences.Editor prefEditor = mPrefs.edit();
+            prefEditor.putString(PREF_USER_EMAIL, mEmailView.getEditableText().toString());
+            prefEditor.commit();
             LeadConstants.getInstance().setSource("SELF");
             Intent initialIntent = new Intent(this, InitialActivity.class);
             startActivity(initialIntent);

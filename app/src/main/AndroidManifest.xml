@@ -8,11 +8,6 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-
     <application
             android:allowBackup="true"
             android:icon="@drawable/awesome_place"
@@ -24,12 +19,11 @@
         <activity android:name=".AgreementActivity"  />
         <activity android:name=".RegisterActivity" 
                   android:windowSoftInputMode="stateVisible|adjustResize" />
-        
         <activity
-                android:name=".LoginActivity">
+                android:name=".LoginActivity" 
+                android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

@@ -10,7 +10,8 @@
     <dimen name="activity_vertical_margin">2dp</dimen>
     <dimen name="activity_vertical_agreement_margin">20dp</dimen>
     <dimen name="initial_screen_button_height">60dp</dimen>
-    <dimen name="initial_screen_button_text_size">20sp</dimen>
+    <dimen name="initial_screen_button_text_size">30sp</dimen>
     <dimen name="text_view_height">60dp</dimen>
     <dimen name="login_screen_spinner_margin">10dp</dimen>
+    <dimen name="text_smaller">24sp</dimen>
 </resources>

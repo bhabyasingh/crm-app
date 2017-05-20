@@ -38,8 +38,8 @@ public class SmsSenderTask extends AsyncTask<String, Integer, Long> {
     @Override
     protected Long doInBackground(String... params) {
         final String number = params[0];
-        final String name = params[1];
-        SmsSender.sendSms(number, name);
+        final String message = params[1];
+        SmsSender.sendSms(message, number);
         return 0L;
     }
 }

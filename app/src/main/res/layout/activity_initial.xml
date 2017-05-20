@@ -4,7 +4,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -16,7 +16,8 @@
             style="?android:textAppearanceSmall"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="@string/register_button_text"
+            android:textSize="@dimen/initial_screen_button_text_size"
+            android:text="@string/submit_button_text"
             android:id="@+id/register_btn"
             android:clickable="true"
             android:onClick="onRegister"
@@ -31,8 +32,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/logo"
+            app:hintTextAppearance="@style/TextLabel"
             android:layout_marginTop="@dimen/initial_screen_button_height"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:id="@+id/phone_number_layout"
+            >
         <EditText android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:textSize="@dimen/initial_screen_button_text_size"
@@ -40,6 +44,15 @@
                   android:id="@+id/phone_number_input"
                   android:clickable="true"
                   android:inputType="phone" 
-                  android:imeOptions="actionGo"/>
+                  android:imeOptions="actionGo"
+                  android:textAlignment="center"/>
     </android.support.design.widget.TextInputLayout>
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textSize="@dimen/text_smaller"
+              android:text="@string/register_screen_instruction"
+              android:layout_below="@id/phone_number_layout"
+              android:layout_marginTop="@dimen/activity_horizontal_agreement_margin"
+    />
+
 </RelativeLayout>
