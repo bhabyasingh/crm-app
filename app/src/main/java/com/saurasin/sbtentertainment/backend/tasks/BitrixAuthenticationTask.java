@@ -9,6 +9,7 @@ import com.saurasin.sbtentertainment.backend.utils.BitrixCRMInvoker;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
 
@@ -19,14 +20,13 @@ import android.os.AsyncTask;
 public class BitrixAuthenticationTask extends AsyncTask<String, Integer, Boolean> {
     private final String username;
     private final String password;
+    private ProgressDialog progressDialog;
+    private final Context ctx;
 
-    public BitrixAuthenticationTask(final String user, final String passwd) {
+    public BitrixAuthenticationTask(final Context aCtx, final String user, final String passwd) {
+        ctx = aCtx;
         this.username = user;
         this.password = passwd;
-    }
-
-    protected void onProgressUpdate(Integer... progress) {
-        
     }
 
 
@@ -34,5 +34,19 @@ public class BitrixAuthenticationTask extends AsyncTask<String, Integer, Boolean
     protected Boolean doInBackground(String... params) {
         Boolean res = BitrixCRMInvoker.initiate(username, password);
         return res;
+    }
+
+    @Override
+    protected void onPreExecute(){
+        super.onPreExecute();
+        progressDialog = new ProgressDialog(ctx);
+        progressDialog.setMessage("Signing In ...");
+        progressDialog.show();
+    }
+
+    @Override
+    protected void onPostExecute(Boolean result){
+        super.onPostExecute(result);
+        progressDialog.dismiss();
     }
 }

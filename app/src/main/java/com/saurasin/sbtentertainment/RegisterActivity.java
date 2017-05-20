@@ -13,7 +13,9 @@ import com.saurasin.sbtentertainment.backend.tasks.BitrixUpdateContactTask;
 import com.saurasin.sbtentertainment.backend.tasks.SmsSenderTask;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,17 +28,15 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by saurasin on 1/26/17.
@@ -65,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String mobileNumberFromIntent;
     
     private final int AGREEMENT_REQUEST_CODE = 1;
+    private final int THANK_YOU_REQUEST_CODE = 2;
     
     private boolean agreementAccepted = true;
     
@@ -132,8 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void getDataFromDB() {
         Entry entry = backend.getEntryByPhone(phoneET.getEditableText().toString());
         if (entry == null) {
-            BitrixGetContactTask task =
-                    new BitrixGetContactTask(this, "Fetching data from CRM", phoneET.getEditableText().toString());
+            BitrixGetContactTask task = new BitrixGetContactTask(this, phoneET.getEditableText().toString());
             task.execute();
             try {
                 entry = task.get();
@@ -201,8 +201,7 @@ public class RegisterActivity extends AppCompatActivity {
             Entry entry = new Entry(email, name, phone, bdayVenueCB.isChecked() ? "YES" : "NO",
                     kidsActivitiesCB.isChecked() ? "YES" : "NO", "YES", children);
             BitrixUpdateContactTask task = 
-                    new BitrixUpdateContactTask(this, "Saving data to backend", entry, 
-                            updateMode, !emailFromBackend.equals(email));
+                    new BitrixUpdateContactTask(this, entry, updateMode, !emailFromBackend.equals(email));
             task.execute();
             Boolean update = false;
             try {
@@ -216,13 +215,35 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     backend.addEntry(entry);
                 }
-                new SmsSenderTask(this, "Processing ...").execute(phone, createMessage(entry));
+                sendSms(entry);
             }
         } else {
-            Toast.makeText(this,
-                    getResources().getText(R.string.terms_not_accepted),
-                    Toast.LENGTH_LONG).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Please accept the terms and conditions to proceed.")
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getText(android.R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
+    }
+    
+    private void sendSms(final Entry entry) {
+        SmsSenderTask task  = new SmsSenderTask(this);
+        task.execute(entry.getPhone(), createMessage(entry));
+        try {
+            task.get(10, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException ex) {
+            Log.e(TAG, "Error while sending SMS:: " + ex.getMessage());
+        } catch (TimeoutException timeoutException) {
+            Log.e(TAG, "Timed out while sending sms:: " + timeoutException.getMessage());
+        }
+        
+        Intent intent = new Intent(this, ThankYouActivity.class);
+        startActivityForResult(intent, THANK_YOU_REQUEST_CODE);
     }
     
     private String createMessage(final Entry entry) {
@@ -265,6 +286,8 @@ public class RegisterActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AGREEMENT_REQUEST_CODE) {
                 agreementAccepted = (resultCode == Activity.RESULT_OK);
+        } else if (requestCode == THANK_YOU_REQUEST_CODE) {
+            finish();
         }
     }
 }

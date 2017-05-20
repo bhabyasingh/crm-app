@@ -9,6 +9,7 @@ import com.saurasin.sbtentertainment.backend.tasks.BitrixAuthenticationTask;
 import com.saurasin.sbtentertainment.backend.utils.LeadConstants;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,8 +27,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -40,7 +39,6 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     // UI references.
     private TextView mEmailView;
     private EditText mPasswordView;
-    private Spinner locationSpinner;
     private SharedPreferences  mPrefs;
     
     private static final String PREF_USER_EMAIL = "useremail";
@@ -82,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     }
     
     private void initializeSpinner() {
-        locationSpinner = (Spinner) findViewById(R.id.location_spinner);
+        Spinner locationSpinner = (Spinner) findViewById(R.id.location_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.location_array, R.layout.spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_layout);
@@ -92,12 +90,15 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     
     @Override
     protected void onDestroy() {
-        //mJobScheduler.cancelAll();
         super.onDestroy();
     }
     
     private void attemptLogin() {
-        BitrixAuthenticationTask task = new BitrixAuthenticationTask(mEmailView.getEditableText().toString(),
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Signing In");
+        progressDialog.show();
+        BitrixAuthenticationTask task = new BitrixAuthenticationTask(this, 
+                mEmailView.getEditableText().toString(),
                 mPasswordView.getEditableText().toString());
         task.execute();
         boolean result = true;
@@ -107,10 +108,11 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             Log.e(TAG, "Error logging in: " + iex.getMessage());
             result = false;
         }
+        progressDialog.dismiss();
         if (result) {
             SharedPreferences.Editor prefEditor = mPrefs.edit();
             prefEditor.putString(PREF_USER_EMAIL, mEmailView.getEditableText().toString());
-            prefEditor.commit();
+            prefEditor.apply();
             LeadConstants.getInstance().setSource("SELF");
             Intent initialIntent = new Intent(this, InitialActivity.class);
             startActivity(initialIntent);

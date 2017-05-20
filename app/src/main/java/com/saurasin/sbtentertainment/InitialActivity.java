@@ -43,6 +43,7 @@ public class InitialActivity extends AppCompatActivity {
     private void openNextScreen() {
         Intent intent = new Intent(this, RegisterActivity.class);
         intent.putExtra(RegisterActivity.MOBILE_INTENT_EXTRA, mobileNumberET.getText().toString());
+        mobileNumberET.setText("");
         startActivity(intent);
     }
     

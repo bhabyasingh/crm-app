@@ -59,7 +59,8 @@
         <item>Elements - Nagawara</item>
         <item>Inorbit - Whitefield</item>
     </string-array>
-    <string name="register_screen_instruction">Enter correct phone number for security reasons. 
+    <string name="register_screen_instruction">Enter correct phone number for security reasons.
         Remove phone from silent mode.
     </string>
+    <string name="thank_you_text">Thank you. Please show sms to staff and let child in.</string>
 </resources>
