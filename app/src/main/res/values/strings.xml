@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~
+  -->
+
+<resources>
+    <string name="app_name">Awesome Place</string>
+    <string name="register_button_text">Register</string>
+    <string name="submit_button_text">Submit</string>
+    <string name="done_button_text">Done</string>
+    <string name="add_child_button_text">Add Child</string>
+    <string name="export_data_button_text">Export Data</string>
+    <string name="import_data_button_text">Import Data</string>
+    <string name="agree_button_text">I Agree</string>
+    <string name="do_not_agree_button_text">I do not Agree</string>
+    <string name="parent_name">Parent name</string>
+    <string name="parent_email">Email</string>
+    <string name="parent_phone">Phone</string>
+    <string name="children">Children</string>
+    <string name="childone_name">Child\'s name</string>
+    <string name="childone_dob">Child\'s Date of Birth</string>
+    <string name="childtwo_name">Second Child\'s name</string>
+    <string name="childtwo_dob">Second Child\'s Date of Birth</string>
+    <string name="childone_details_missing">Enter details of atleast one child</string>
+    <string name="agreement_text">I hereby agree that any child/children in my care, are monitored by me at all times. I
+        will ensure that they do not behave in any manner so as to cause any accident or a mishap to themselves or
+        others. I take full responsibility for their safety and will not hold management/staff of <b>Awesome Place</b>liable
+        for any injury or accident caused.\n\nI am happy with the play area safety factors, have reviewed hygiene
+        schedule (ask staff for details) and am happy with all aspects, only after which I am allowing children (&amp;
+        myself if child &lt; 3 yrs) in my care to enter.\n\nI agree to comply with all the rules and regulations of
+        Awesome Place, and understand that I may be asked to leave if I or the child/children under my supervision do
+        not observe these rules.\n\nI agree to pay Rs.500/- if the child does potty or Rs.200/- if the child urinates or
+        vomit in <b>Awesome Place</b> premises as housekeeping charges.
+    </string>
+    <string name="confirmation_sms">Thank you for registering with Awesome Place.</string>
+    <string name="interested_in_bday">Are you interested in Birthday venue?</string>
+    <string name="interested_in_kids_act">Are you interested in Kids Activities?</string>
+    <string name="parent_location">Location</string>
+    <string name="parent_notes">Notes</string>
+    <string name="phone_number_text">Phone Number</string>
+    <string name="terms_and_condition">Do you agree to the terms and condition?</string>
+    <string name="terms_not_accepted">Please accept terms and condition to proceed</string>
+    <string name="view_terms_and_cond">View terms and condition</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+
+    <string name="location">Location</string>
+    <string-array name="location_array">
+        <item>Elements - Nagawara</item>
+        <item>Inorbit - Whitefield</item>
+    </string-array>
+</resources>

@@ -1,0 +1,16 @@
+<!--
+  ~ Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~
+  -->
+
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">2dp</dimen>
+    <dimen name="activity_horizontal_agreement_margin">20dp</dimen>
+    <dimen name="activity_vertical_margin">2dp</dimen>
+    <dimen name="activity_vertical_agreement_margin">20dp</dimen>
+    <dimen name="initial_screen_button_height">60dp</dimen>
+    <dimen name="initial_screen_button_text_size">20sp</dimen>
+    <dimen name="text_view_height">60dp</dimen>
+    <dimen name="login_screen_spinner_margin">10dp</dimen>
+</resources>
