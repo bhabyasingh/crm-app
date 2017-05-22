@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -31,20 +32,26 @@ public class Entry {
     private String bdayVenue;
     private String kidsActivity;
     private String synced;
-    List<ChildEntry> children;
+    private String emailModified;
+    private List<ChildEntry> children;
     
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     
-    public Entry(final String e, final String n, final String p, final String bdayV, 
-                 final String kidsAct, final String s, final List<ChildEntry> ce) {
+    public Entry(final String i, final String e, final String n, final String p, final String bdayV, 
+                 final String kidsAct, final String s, final String eMod, final List<ChildEntry> ce) {
+        id = i;
         this.email = e;
         this.name = n;
         this.phone = p;
         bdayVenue = bdayV;
         kidsActivity = kidsAct;
         synced = s;
+        emailModified = eMod;
         this.children = ce;
     }
+    
+    public String getId() { return id; }
+    public void setId(final String crmId) { id = crmId; }
     
     public String getEmail() {
         return email;
@@ -78,8 +85,13 @@ public class Entry {
         synced = isSynced;
     }
     
+    public boolean isEmailModified() { return "YES".equals(emailModified); }
+    
+    public void setEmailModified(final String emlModified) { emailModified = emlModified; }
+    
     public static Entry createFromBitrixJson(final JSONObject entryJson) {
         try {
+            final String id = entryJson.getString("ID");
             final String name = entryJson.getString("NAME");
             final JSONArray phoneList = entryJson.getJSONArray("PHONE");
             final String phone = ((JSONObject)phoneList.get(0)).getString("VALUE");
@@ -101,49 +113,17 @@ public class Entry {
                 Log.e(TAG, "Error parsing date:: " + ex.getMessage());
             }
             
-            
-            Log.e(TAG, "Saurabh:: " + email + name + phone + bDayYN + kidsActYN + childsName + childsBday);
             ChildEntry ce  = new ChildEntry(childsName, childsBday);
             List<ChildEntry> ceList = new ArrayList<ChildEntry>();
             ceList.add(ce);
-            Entry entry = new Entry(email, name, phone, bDayYN, kidsActYN, "YES", ceList);
-            return entry;
-            
-                    
+            return new Entry(id, email, name, phone, bDayYN, kidsActYN, "YES", "NO", ceList);
         } catch (JSONException ex) {
             Log.e(TAG, "Error occured while getting data from backend "+ ex.getMessage());
         }
         return null;
     }
     
-    public String getUpdateUrlString(final String urlFormat, final String token, final String id) {
-        String childName = "";
-        String birthdate = "";
-        if (children.size() > 0) {
-            ChildEntry ce = children.get(0);
-            childName = ce.getName();
-            String[] dob = ce.getDOB().split("/");
-            birthdate = String.format("%s/%s/%s", dob[1], dob[0], dob[2]);
-        }
-        return String.format(urlFormat, token, id, name, name, phone, birthdate, childName, email, 
-                bdayVenue.equals("YES")?"Y":"N", kidsActivity.equals("YES")?"Y":"N");
-    }
-    
-    public String getAddUrlString(final String urlFormat, final String token) {
-        String childName = "";
-        String birthdate = "";
-        if (children.size() > 0) {
-            ChildEntry ce = children.get(0);
-            childName = ce.getName();
-            String[] dob = ce.getDOB().split("/");
-            birthdate = String.format("%s/%s/%s", dob[1], dob[0], dob[2]);
-        }
-        return String.format(urlFormat, token, name, name, phone, birthdate, childName, email,
-                bdayVenue.equals("YES")?"Y":"N", kidsActivity.equals("YES")?"Y":"N");
-    }
-
-    
-    public JSONObject getEntryJson(final boolean isUpdate, final boolean emailChanged) {
+    public JSONObject getEntryJson() {
         String childName = "";
         String birthdate = "";
         if (children.size() > 0) {
@@ -157,7 +137,7 @@ public class Entry {
             
             fields.put("TITLE", name);
             fields.put("NAME", name);
-            if (!isUpdate) {
+            if (TextUtils.isEmpty(id)) {
                 JSONObject phoneObject = new JSONObject();
                 JSONArray phoneNums = new JSONArray();
                 phoneObject.put("VALUE", phone);
@@ -166,7 +146,7 @@ public class Entry {
                 fields.put("PHONE", phoneNums);
             }
 
-            if (emailChanged) {
+            if (isEmailModified()) {
                 JSONObject emailObject = new JSONObject();
                 JSONArray emails = new JSONArray();
                 emailObject.put("VALUE", email);

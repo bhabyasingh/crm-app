@@ -5,6 +5,8 @@
 
 package com.saurasin.sbtentertainment;
 
+import com.saurasin.sbtentertainment.backend.CrmUpdater;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +36,8 @@ public class InitialActivity extends AppCompatActivity {
                 return handled;
             }
         });
+
+        startService(new Intent(this, CrmUpdater.class));
     }
     
     public void onRegister(View v) {

@@ -5,6 +5,9 @@
 
 package com.saurasin.sbtentertainment.backend.utils;
 
+import com.saurasin.sbtentertainment.backend.model.ChildEntry;
+import com.saurasin.sbtentertainment.backend.model.Entry;
+
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -13,6 +16,10 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 public class SmsSender {
     
@@ -47,5 +54,27 @@ public class SmsSender {
         {
            Log.e(TAG, "Error SMS " + e);
         }
+    }
+
+    public static String createMessage(final Entry entry) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Welcome to Awesome Place - ");
+        stringBuilder.append(entry.getName());
+        List<ChildEntry> ce =  entry.getChildren();
+        for (int i = 0; i < ce.size(); i++) {
+            stringBuilder.append(",");
+            stringBuilder.append(ce.get(i).getName());
+        }
+
+        SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd.MM.yyyy 'at' HH:mm:ss");
+        dateFormatter.setTimeZone(TimeZone.getDefault());
+        stringBuilder.append(". Emergency - ");
+        stringBuilder.append(entry.getPhone());
+        stringBuilder.append(". Time - ");
+        stringBuilder.append(dateFormatter.format(new Date()));
+        stringBuilder.append(". PLEASE REMOVE PHONE FROM SILENT AND STAY ALERT. THANK YOU.");
+        stringBuilder.append(" Buy one membership, use multiple locations - ");
+        stringBuilder.append("Elements Mall Nagawara, Forum Mall Whitefield.");
+        return stringBuilder.toString();
     }
 }

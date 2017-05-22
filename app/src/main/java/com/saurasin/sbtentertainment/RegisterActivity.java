@@ -11,6 +11,7 @@ import com.saurasin.sbtentertainment.backend.model.Entry;
 import com.saurasin.sbtentertainment.backend.tasks.BitrixGetContactTask;
 import com.saurasin.sbtentertainment.backend.tasks.BitrixUpdateContactTask;
 import com.saurasin.sbtentertainment.backend.tasks.SmsSenderTask;
+import com.saurasin.sbtentertainment.backend.utils.SmsSender;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -61,7 +62,6 @@ public class RegisterActivity extends AppCompatActivity {
     
     private List<ChildEntry> children;
     private AgreementBackend backend;
-    private boolean updateMode;
     private String mobileNumberFromIntent;
     
     private final int AGREEMENT_REQUEST_CODE = 1;
@@ -70,12 +70,12 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean agreementAccepted = true;
     
     private String emailFromBackend = "";
+    private String crmId = "";
     
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        updateMode = false;
         setContentView(R.layout.register_layout);
         
         phoneET = (EditText) findViewById(R.id.parentPhoneEdit);
@@ -91,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
         doneButon = (Button) findViewById(R.id.submit_button);
         children = new ArrayList<>();
 
-        backend = new AgreementBackend(this);
+        backend = AgreementBackend.getInstance(this);
 
         Calendar newCalendar = Calendar.getInstance();
         final DatePickerDialog childOneDOB = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -137,22 +137,20 @@ public class RegisterActivity extends AppCompatActivity {
             task.execute();
             try {
                 entry = task.get();
-            }catch (InterruptedException|ExecutionException e) {
+            } catch (InterruptedException|ExecutionException e) {
                 Log.e(TAG, "Error while fetching data from CRM" + e.getMessage());
             }
             if (entry != null) {
                 backend.addEntry(entry);
                 getDataFromDB();
-            } else {
-                updateMode = false;
             }
         } else {
+            crmId = entry.getId();
             updateUIWithEntry(entry);
         }
     }
     
     private void updateUIWithEntry(final Entry entry) {
-        updateMode = true;
         emailET.setText(entry.getEmail());
         nameET.setText(entry.getName());
         bdayVenueCB.setChecked("YES".equals(entry.getInterestInBdayVenue()));
@@ -168,7 +166,6 @@ public class RegisterActivity extends AppCompatActivity {
         termsAndConditionCB.setChecked(agreementAccepted);
         doneButon.setText(R.string.done_button_text);
         phoneET.setEnabled(false);
-        updateMode = true;
         emailFromBackend = entry.getEmail();
     }
     
@@ -198,25 +195,15 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            Entry entry = new Entry(email, name, phone, bdayVenueCB.isChecked() ? "YES" : "NO",
-                    kidsActivitiesCB.isChecked() ? "YES" : "NO", "YES", children);
-            BitrixUpdateContactTask task = 
-                    new BitrixUpdateContactTask(this, entry, updateMode, !emailFromBackend.equals(email));
-            task.execute();
-            Boolean update = false;
-            try {
-                update = task.get();
-            } catch(InterruptedException|ExecutionException iex) {
-                Toast.makeText(this, "Error while syncing with backend", Toast.LENGTH_LONG).show();
+            Entry entry = new Entry(crmId, email, name, phone, bdayVenueCB.isChecked() ? "YES" : "NO",
+                    kidsActivitiesCB.isChecked() ? "YES" : "NO", "NO",
+                    !emailFromBackend.equals(email)?"YES":"NO", children);
+            if (!TextUtils.isEmpty(crmId)) {
+                backend.updateEntry(entry);
+            } else {
+                backend.addEntry(entry);
             }
-            if (update) {
-                if (updateMode) {
-                    backend.updateEntry(entry);
-                } else {
-                    backend.addEntry(entry);
-                }
-                sendSms(entry);
-            }
+            sendSms(entry);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Please accept the terms and conditions to proceed.")
@@ -233,7 +220,7 @@ public class RegisterActivity extends AppCompatActivity {
     
     private void sendSms(final Entry entry) {
         SmsSenderTask task  = new SmsSenderTask(this);
-        task.execute(entry.getPhone(), createMessage(entry));
+        task.execute(entry.getPhone(), SmsSender.createMessage(entry));
         try {
             task.get(10, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException ex) {
@@ -244,28 +231,6 @@ public class RegisterActivity extends AppCompatActivity {
         
         Intent intent = new Intent(this, ThankYouActivity.class);
         startActivityForResult(intent, THANK_YOU_REQUEST_CODE);
-    }
-    
-    private String createMessage(final Entry entry) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Welcome to Awesome Place - ");
-        stringBuilder.append(entry.getName());
-        List<ChildEntry> ce =  entry.getChildren();
-        for (int i = 0; i < ce.size(); i++) {
-            stringBuilder.append("," + ce.get(i).getName());
-        }
-        
-        SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd.MM.yyyy 'at' HH:mm:ss");
-        dateFormatter.setTimeZone(TimeZone.getDefault());
-        stringBuilder.append(". Emergency - ");
-        stringBuilder.append(entry.getPhone());
-        stringBuilder.append(". Time - ");
-        stringBuilder.append(dateFormatter.format(new Date()));
-        stringBuilder.append(". PLEASE REMOVE PHONE FROM SILENT AND STAY ALERT. THANK YOU.");
-        stringBuilder.append(" Buy one membership, use multiple locations - ");
-        stringBuilder.append("Elements Mall Nagawara, Forum Mall Whitefield.");
-        String message = stringBuilder.toString();
-        return message;
     }
     
     @Override

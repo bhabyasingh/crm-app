@@ -33,6 +33,7 @@
         <activity
                 android:name=".ThankYouActivity"
                 android:windowSoftInputMode="stateVisible|adjustResize" />
+        <service android:name=".backend.CrmUpdater" />
     </application>
 
 </manifest>

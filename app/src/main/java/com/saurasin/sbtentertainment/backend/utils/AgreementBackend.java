@@ -24,12 +24,14 @@ public class AgreementBackend extends SQLiteOpenHelper {
     
     final private static String DATABASE_NAME = "awesomeplace.db";
     final private static String PARENT_TABLE_NAME = "parents";
+    final private static String CRM_ID = "id";
     final private static String PARENT_NAME = "name";
     final private static String PARENT_EMAIL = "email";
     final private static String PARENT_PHONE = "phone";
     final private static String BDAY_INTEREST = "bday_interest";
     final private static String SYNCED = "synced";
     final private static String KIDS_ACT_INTEREST = "kids_activity_interest";
+    final private static String EMAIL_MODIFIED = "email_modified";
     
     final private static String CHILDREN_TABLE_NAME = "children";
     final private static String CHILDREN_NAME = "name";
@@ -50,26 +52,28 @@ public class AgreementBackend extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table parents " +
-                "(" + PARENT_PHONE + " text primary_key," + PARENT_EMAIL + " text," + BDAY_INTEREST + " text, " +
-                KIDS_ACT_INTEREST + " text, " + PARENT_NAME +" text, " + SYNCED + " text);");
+        db.execSQL("create table "  + PARENT_TABLE_NAME  +
+                " (" + PARENT_PHONE + " text primary_key," + PARENT_EMAIL + " text," + BDAY_INTEREST + " text, " +
+                KIDS_ACT_INTEREST + " text, " + PARENT_NAME +" text, " + SYNCED + " text," + EMAIL_MODIFIED + " text," 
+                + CRM_ID + " text);");
         db.execSQL("create table children " +
                 "(name text, dob text, parent_id text);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
     
     private ContentValues getContentForParentInfo(final Entry entry) {
         ContentValues cv = new ContentValues();
+        cv.put(CRM_ID, entry.getId());
         cv.put(PARENT_NAME, entry.getName());
         cv.put(PARENT_EMAIL, entry.getEmail());
         cv.put(PARENT_PHONE, entry.getPhone());
         cv.put(BDAY_INTEREST, entry.getInterestInBdayVenue());
         cv.put(KIDS_ACT_INTEREST, entry.getInterestInKidsActivities());
-        cv.put(SYNCED, "NO");
+        cv.put(SYNCED, entry.isSynced()?"YES":"NO");
+        cv.put(EMAIL_MODIFIED, entry.isEmailModified()?"YES":"NO");
         return cv;
     }
     
@@ -111,24 +115,51 @@ public class AgreementBackend extends SQLiteOpenHelper {
     }
     
     public Entry getEntryByPhone(final String phone) {
-        Entry entry = null;
         SQLiteDatabase db = this.getReadableDatabase();
+        Cursor parentCursor =  db.rawQuery( "select * from parents where phone=\'" + phone + "\'", null );
+        parentCursor.moveToFirst();
+        Entry entry = createEntryFromCursor(db,parentCursor);
+        parentCursor.close();
+        return entry;
+    }
+    
+    public List<Entry> getUnsyncedEntries() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Entry> entries = new ArrayList<>();
+        Cursor parentCursor =  db.rawQuery( "select * from parents where synced=\'NO\'", null );
+        parentCursor.moveToFirst();
+        while (!parentCursor.isAfterLast()) {
+            Entry entry = createEntryFromCursor(db, parentCursor);
+            entries.add(entry);
+            parentCursor.moveToNext();
+        }
+        parentCursor.close();
+        return entries;
+    }
+    
+    private Entry createEntryFromCursor(SQLiteDatabase db, Cursor parentCursor) {
+        Entry entry = null;
+        
+        String crmId = null;
         String parentName = null;
         String parentEmail = null;
         String interestInBday = null;
         String interestInKidsAct = null;
         String synced = null;
+        String emailModified = null;
+        String phone = null;
         List<ChildEntry> children = new ArrayList<>();
-        Cursor parentCursor =  db.rawQuery( "select * from parents where phone=\'" + phone + "\'", null );
-        parentCursor.moveToFirst();
         if (!parentCursor.isAfterLast()) {
+            crmId = parentCursor.getString(parentCursor.getColumnIndex(CRM_ID));
             parentName = parentCursor.getString(parentCursor.getColumnIndex(PARENT_NAME));
             parentEmail = parentCursor.getString(parentCursor.getColumnIndex(PARENT_EMAIL));
             interestInBday = parentCursor.getString(parentCursor.getColumnIndex(BDAY_INTEREST));
             interestInKidsAct = parentCursor.getString(parentCursor.getColumnIndex(KIDS_ACT_INTEREST));
             synced = parentCursor.getString(parentCursor.getColumnIndex(SYNCED));
+            emailModified = parentCursor.getString(parentCursor.getColumnIndex(EMAIL_MODIFIED));
+            phone = parentCursor.getString(parentCursor.getColumnIndex((PARENT_PHONE)));
         }
-        parentCursor.close();
+
         Cursor childrenCursor = db.rawQuery("select * from children where parent_id=\'" + phone + "\'", null);
         childrenCursor.moveToFirst();
         while (!childrenCursor.isAfterLast()) {
@@ -139,9 +170,10 @@ public class AgreementBackend extends SQLiteOpenHelper {
             childrenCursor.moveToNext();
         }
         childrenCursor.close();
+        
         if (parentName != null) {
-            entry = new Entry(parentEmail, parentName, phone, interestInBday, 
-                            interestInKidsAct, synced, children);
+            entry = new Entry(crmId, parentEmail, parentName, phone, interestInBday,
+                    interestInKidsAct, synced, emailModified, children);
         }
         return entry;
     }

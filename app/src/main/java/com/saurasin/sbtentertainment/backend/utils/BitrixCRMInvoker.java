@@ -134,13 +134,13 @@ public class BitrixCRMInvoker {
         return null;
     }
     
-    public static Boolean saveEntryToBackend(final Entry entry, final boolean isUpdate, final boolean emailChanged) {
-        Boolean synced = false; 
+    public static String saveEntryToBackend(final Entry entry) {
+        String crmId = ""; 
         final String customerId = getIdForMobileNumber(entry.getPhone());
         String crmQuery = "";
         
         JSONObject postDataObj = new JSONObject();
-        JSONObject entryJson = entry.getEntryJson(isUpdate, emailChanged);
+        JSONObject entryJson = entry.getEntryJson();
         try {
             entryJson.put("UF_CRM_1467901654", LeadConstants.getInstance().getLocationId());
             entryJson.put("SOURCE_ID", LeadConstants.getInstance().getSource());
@@ -178,13 +178,19 @@ public class BitrixCRMInvoker {
             while ((line = reader.readLine()) != null) {
                 builder.append(line);
             }
-            
-            Log.e(TAG, "Saved successfully:: " + builder.toString());
-            synced = true;
-        } catch (IOException ex) {
+
+            String result = builder.toString();
+            if (customerId == null) {
+                JSONObject jsonObject = new JSONObject(result);
+                crmId = jsonObject.getString("result");
+            } else {
+                crmId = customerId;
+            }
+            Log.e(TAG, "Saved successfully:: " + result);
+        } catch (IOException|JSONException ex) {
             Log.e(TAG, "Error while saving user:: " + ex.getMessage());
         }
-        return synced;
+        return crmId;
     }
 
    

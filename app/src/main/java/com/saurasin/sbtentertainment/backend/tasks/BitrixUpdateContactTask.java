@@ -16,37 +16,27 @@ import android.os.AsyncTask;
  * Created by saurasin on 5/10/17.
  */
 
-public class BitrixUpdateContactTask extends AsyncTask<Entry, Integer, Boolean> {
+public class BitrixUpdateContactTask extends AsyncTask<Entry, Integer, String> {
     private Entry entry;
-    private boolean isUpdate;
-    private boolean emailChanged;
-    private ProgressDialog progressDialog;
     private final Context ctx;
 
-    public BitrixUpdateContactTask(final Context aCtx, final Entry contact, 
-                                   final boolean update, final boolean hasEmailChanged) {
+    public BitrixUpdateContactTask(final Context aCtx, final Entry contact) {
         ctx = aCtx;
         entry = contact;
-        isUpdate = update;
-        emailChanged = hasEmailChanged;
     }
     
     @Override
-    protected Boolean doInBackground(Entry... params) {
-        return BitrixCRMInvoker.saveEntryToBackend(entry, isUpdate, emailChanged);
+    protected String doInBackground(Entry... params) {
+        return BitrixCRMInvoker.saveEntryToBackend(entry);
     }
     
     @Override
     protected void onPreExecute(){
         super.onPreExecute();
-        progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Saving data to CRM ...");
-        progressDialog.show();
     }
 
     @Override
-    protected void onPostExecute(Boolean result){
+    protected void onPostExecute(String result){
         super.onPostExecute(result);
-        progressDialog.dismiss();
     }
 }
