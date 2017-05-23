@@ -73,8 +73,6 @@ public class SmsSender {
         stringBuilder.append(". Time - ");
         stringBuilder.append(dateFormatter.format(new Date()));
         stringBuilder.append(". PLEASE REMOVE PHONE FROM SILENT AND STAY ALERT. THANK YOU.");
-        stringBuilder.append(" Buy one membership, use multiple locations - ");
-        stringBuilder.append("Elements Mall Nagawara, Forum Mall Whitefield.");
         return stringBuilder.toString();
     }
 }
