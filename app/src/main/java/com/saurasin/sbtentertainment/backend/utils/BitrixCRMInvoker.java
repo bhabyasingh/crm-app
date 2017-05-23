@@ -180,11 +180,17 @@ public class BitrixCRMInvoker {
             }
 
             String result = builder.toString();
+            JSONObject jsonObject = new JSONObject(result);
+            final String res = jsonObject.getString("result");
             if (customerId == null) {
-                JSONObject jsonObject = new JSONObject(result);
-                crmId = jsonObject.getString("result");
+                crmId = res;
             } else {
-                crmId = customerId;
+                final Boolean success = Boolean.parseBoolean(res);
+                if (success) {
+                    crmId = customerId;
+                } else {
+                    crmId = "";
+                }
             }
             Log.e(TAG, "Saved successfully:: " + result);
         } catch (IOException|JSONException ex) {

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.List;
@@ -65,10 +66,12 @@ public class CrmUpdater extends Service {
                         task.execute();
                         try {
                             String crmId = task.get();
-                            entry.setSynced("YES");
-                            entry.setEmailModified("NO");
-                            entry.setId(crmId);
-                            AgreementBackend.getInstance(getApplicationContext()).updateEntry(entry);
+                            if (!TextUtils.isEmpty(crmId)) {
+                                entry.setSynced("YES");
+                                entry.setEmailModified("NO");
+                                entry.setId(crmId);
+                                AgreementBackend.getInstance(getApplicationContext()).updateEntry(entry);
+                            }
                         } catch (InterruptedException|ExecutionException ex) {
                             Log.e(TAG, "Error saving to backend:: " + ex.getMessage() );
                         }
