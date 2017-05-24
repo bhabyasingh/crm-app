@@ -13,12 +13,12 @@
     <string name="import_data_button_text">Import Data</string>
     <string name="agree_button_text">I Agree</string>
     <string name="do_not_agree_button_text">I do not Agree</string>
-    <string name="parent_name">Parent name</string>
+    <string name="parent_name">*Parent name</string>
     <string name="parent_email">Email</string>
-    <string name="parent_phone">Phone</string>
+    <string name="parent_phone">*Phone</string>
     <string name="children">Children</string>
-    <string name="childone_name">Child\'s name</string>
-    <string name="childone_dob">Child\'s Date of Birth</string>
+    <string name="childone_name">*Child\'s name</string>
+    <string name="childone_dob">*Child\'s Date of Birth</string>
     <string name="childtwo_name">Second Child\'s name</string>
     <string name="childtwo_dob">Second Child\'s Date of Birth</string>
     <string name="childone_details_missing">Enter details of atleast one child</string>
@@ -38,9 +38,9 @@
     <string name="parent_location">Location</string>
     <string name="parent_notes">Notes</string>
     <string name="phone_number_text">Phone Number</string>
-    <string name="terms_and_condition">Do you agree to the terms and condition?</string>
+    <string name="terms_and_condition_agree">*I agree with\u0020</string>
+    <string name="terms_link">terms and condition</string>
     <string name="terms_not_accepted">Please accept terms and condition to proceed</string>
-    <string name="view_terms_and_cond">View terms and condition</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -63,4 +63,19 @@
         Remove phone from silent mode.
     </string>
     <string name="thank_you_text">Thank you. Please show sms to staff and let child in.</string>
+    <string-array name="months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string name="btn_start_again_txt">Start Again</string>
 </resources>

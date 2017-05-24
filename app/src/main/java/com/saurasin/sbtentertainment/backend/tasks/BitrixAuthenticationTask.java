@@ -20,11 +20,8 @@ import android.os.AsyncTask;
 public class BitrixAuthenticationTask extends AsyncTask<String, Integer, Boolean> {
     private final String username;
     private final String password;
-    private ProgressDialog progressDialog;
-    private final Context ctx;
 
-    public BitrixAuthenticationTask(final Context aCtx, final String user, final String passwd) {
-        ctx = aCtx;
+    public BitrixAuthenticationTask(final String user, final String passwd) {
         this.username = user;
         this.password = passwd;
     }
@@ -39,14 +36,10 @@ public class BitrixAuthenticationTask extends AsyncTask<String, Integer, Boolean
     @Override
     protected void onPreExecute(){
         super.onPreExecute();
-        progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Signing In ...");
-        progressDialog.show();
     }
 
     @Override
     protected void onPostExecute(Boolean result){
         super.onPostExecute(result);
-        progressDialog.dismiss();
     }
 }

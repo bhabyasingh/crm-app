@@ -126,11 +126,15 @@ public class Entry {
     public JSONObject getEntryJson() {
         String childName = "";
         String birthdate = "";
+        int monthIndex = 200;
+        int yearIndex = 226;
         if (children.size() > 0) {
             ChildEntry ce = children.get(0);
             childName = ce.getName();
             String[] dob = ce.getDOB().split("/");
-            birthdate = String.format("%s/%s/%s", dob[1], dob[0], dob[2]);
+            birthdate = String.format("%s/%s/%s", dob[0], dob[1], dob[2]);
+            monthIndex += Integer.parseInt(dob[1])*2;
+            yearIndex += Math.abs(Integer.parseInt(dob[2]) - 2016)*2;
         }
         JSONObject fields = new JSONObject();
         try {
@@ -157,6 +161,9 @@ public class Entry {
 
             fields.put("BIRTHDATE", birthdate);
             fields.put("UF_CRM_1467906624", childName);
+            
+            fields.put("UF_CRM_1478418831", monthIndex);
+            fields.put("UF_CRM_1478418918", yearIndex);
 
             fields.put("UF_CRM_1467822240", bdayVenue.equals("YES") ? "Y" : "N");
             fields.put("UF_CRM_1467822198", kidsActivity.equals("YES") ? "Y" : "N");

@@ -13,7 +13,7 @@
             android:id="@+id/submit_button"
             style="?android:textAppearanceSmall"
             android:layout_height="wrap_content"
-            android:text="@string/submit_button_text"
+            android:text="@string/btn_start_again_txt"
             android:layout_alignParentBottom="true"
             android:textSize="@dimen/initial_screen_button_text_size"
             android:clickable="true"

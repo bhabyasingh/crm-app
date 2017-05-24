@@ -17,12 +17,6 @@ import android.os.AsyncTask;
  */
 
 public class SmsSenderTask extends AsyncTask<String, Integer, Long> {
-    private final Context ctx;
-    private ProgressDialog progressDialog;
-    
-    public SmsSenderTask(final Context aCtx) {
-        ctx = aCtx;
-    }
     @Override
     protected Long doInBackground(String... params) {
         final String number = params[0];
@@ -34,14 +28,10 @@ public class SmsSenderTask extends AsyncTask<String, Integer, Long> {
     @Override
     protected void onPreExecute(){
         super.onPreExecute();
-        progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Saving data to CRM ...");
-        progressDialog.show();
     }
 
     @Override
     protected void onPostExecute(Long result){
         super.onPostExecute(result);
-        progressDialog.dismiss();
     }
 }

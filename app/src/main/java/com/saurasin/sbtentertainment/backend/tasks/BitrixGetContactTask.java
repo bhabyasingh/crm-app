@@ -18,11 +18,8 @@ import android.os.AsyncTask;
  */
 public class BitrixGetContactTask extends AsyncTask<String, Integer, Entry> {
     private String mobileNumber;
-    private ProgressDialog progressDialog;
-    private final Context ctx;
 
-    public BitrixGetContactTask(final Context aCtx, final String mNumber) {
-        ctx = aCtx;
+    public BitrixGetContactTask(final String mNumber) {
         this.mobileNumber = mNumber;
     }
     
@@ -34,14 +31,10 @@ public class BitrixGetContactTask extends AsyncTask<String, Integer, Entry> {
     @Override
     protected void onPreExecute(){
         super.onPreExecute();
-        progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Fetching contact from CRM ...");
-        progressDialog.show();
     }
 
     @Override
     protected void onPostExecute(Entry result){
         super.onPostExecute(result);
-        progressDialog.dismiss();
     }
 }

@@ -18,10 +18,8 @@ import android.os.AsyncTask;
 
 public class BitrixUpdateContactTask extends AsyncTask<Entry, Integer, String> {
     private Entry entry;
-    private final Context ctx;
 
-    public BitrixUpdateContactTask(final Context aCtx, final Entry contact) {
-        ctx = aCtx;
+    public BitrixUpdateContactTask(final Entry contact) {
         entry = contact;
     }
     

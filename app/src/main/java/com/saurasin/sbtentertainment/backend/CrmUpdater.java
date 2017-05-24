@@ -62,7 +62,7 @@ public class CrmUpdater extends Service {
                 public void run() {
                     List<Entry> entries = AgreementBackend.getInstance(getApplicationContext()).getUnsyncedEntries();
                     for(Entry entry : entries) {
-                        BitrixUpdateContactTask task = new BitrixUpdateContactTask(getApplicationContext(), entry);
+                        BitrixUpdateContactTask task = new BitrixUpdateContactTask(entry);
                         task.execute();
                         try {
                             String crmId = task.get();

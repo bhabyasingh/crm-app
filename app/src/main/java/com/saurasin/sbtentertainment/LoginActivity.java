@@ -9,7 +9,6 @@ import com.saurasin.sbtentertainment.backend.tasks.BitrixAuthenticationTask;
 import com.saurasin.sbtentertainment.backend.utils.LeadConstants;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -94,10 +93,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     }
     
     private void attemptLogin() {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Signing In");
-        progressDialog.show();
-        BitrixAuthenticationTask task = new BitrixAuthenticationTask(this, 
+        BitrixAuthenticationTask task = new BitrixAuthenticationTask(
                 mEmailView.getEditableText().toString(),
                 mPasswordView.getEditableText().toString());
         task.execute();
@@ -108,7 +104,6 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             Log.e(TAG, "Error logging in: " + iex.getMessage());
             result = false;
         }
-        progressDialog.dismiss();
         if (result) {
             SharedPreferences.Editor prefEditor = mPrefs.edit();
             prefEditor.putString(PREF_USER_EMAIL, mEmailView.getEditableText().toString());
