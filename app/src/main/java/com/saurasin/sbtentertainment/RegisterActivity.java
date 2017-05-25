@@ -1,5 +1,6 @@
 package com.saurasin.sbtentertainment;
 
+import com.saurasin.sbtentertainment.backend.tasks.onTaskCompleted;
 import com.saurasin.sbtentertainment.backend.utils.AgreementBackend;
 import com.saurasin.sbtentertainment.backend.model.ChildEntry;
 import com.saurasin.sbtentertainment.backend.model.Entry;
@@ -9,6 +10,7 @@ import com.saurasin.sbtentertainment.backend.utils.SmsSender;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +35,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by saurasin on 1/26/17.
  */
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements onTaskCompleted<Entry> {
     
     final static String TAG = RegisterActivity.class.getSimpleName();
     
@@ -126,21 +128,23 @@ public class RegisterActivity extends AppCompatActivity {
         childonedobDay.setAdapter(datesAdapter);
         childtwodobDay.setAdapter(datesAdapter);
     }
+
+    private ProgressDialog showProgressDialog(final String message) {
+        ProgressDialog pd = new ProgressDialog(this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage(message);
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+        return  pd;
+    }
     
     private void getDataFromDB() {
         Entry entry = backend.getEntryByPhone(phoneET.getEditableText().toString());
         if (entry == null) {
-            BitrixGetContactTask task = new BitrixGetContactTask(phoneET.getEditableText().toString());
+            BitrixGetContactTask task = new BitrixGetContactTask(showProgressDialog("Fetching data from backend .."), 
+                    this, phoneET.getEditableText().toString());
             task.execute();
-            try {
-                entry = task.get();
-            } catch (InterruptedException|ExecutionException e) {
-                Log.e(TAG, "Error while fetching data from CRM" + e.getMessage());
-            }
-            if (entry != null) {
-                backend.addEntry(entry);
-                getDataFromDB();
-            }
         } else {
             crmId = entry.getId();
             updateUIWithEntry(entry);
@@ -247,18 +251,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
     
     private void sendSms(final Entry entry) {
-        SmsSenderTask task  = new SmsSenderTask();
+        SmsSenderTask task  = new SmsSenderTask(showProgressDialog("Sending sms ..."), new onTaskCompleted<Long>() {
+            @Override
+            public void onTaskCompleted(Long aLong) {
+                Intent intent = new Intent(getApplicationContext(), ThankYouActivity.class);
+                startActivityForResult(intent, THANK_YOU_REQUEST_CODE);
+            }
+        });
         task.execute(entry.getPhone(), SmsSender.createMessage(entry));
-        try {
-            task.get(10, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException ex) {
-            Log.e(TAG, "Error while sending SMS:: " + ex.getMessage());
-        } catch (TimeoutException timeoutException) {
-            Log.e(TAG, "Timed out while sending sms:: " + timeoutException.getMessage());
-        }
-        
-        Intent intent = new Intent(this, ThankYouActivity.class);
-        startActivityForResult(intent, THANK_YOU_REQUEST_CODE);
     }
     
     @Override
@@ -286,6 +286,14 @@ public class RegisterActivity extends AppCompatActivity {
     
     public void onCancel(View v) {
         finish();
+    }
+
+    @Override
+    public void onTaskCompleted(Entry entry) {
+        if (entry != null) {
+            backend.addEntry(entry);
+            getDataFromDB();
+        }
     }
 }
 

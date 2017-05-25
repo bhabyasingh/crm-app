@@ -1,6 +1,7 @@
 package com.saurasin.sbtentertainment;
 
 import com.saurasin.sbtentertainment.backend.tasks.BitrixAuthenticationTask;
+import com.saurasin.sbtentertainment.backend.tasks.onTaskCompleted;
 import com.saurasin.sbtentertainment.backend.utils.LeadConstants;
 
 import android.app.AlertDialog;
@@ -14,11 +15,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,7 +27,8 @@ import java.util.concurrent.ExecutionException;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class LoginActivity extends AppCompatActivity 
+        implements AdapterView.OnItemSelectedListener, onTaskCompleted<Boolean> {
     
     private static String TAG = LoginActivity.class.getSimpleName();
     // UI references.
@@ -81,37 +81,21 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onDestroy();
     }
     
+    private ProgressDialog showProgressDialog() {
+        ProgressDialog pd = new ProgressDialog(this);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setMessage("Signin in ...");
+        pd.setIndeterminate(true);
+        pd.setCancelable(false);
+        pd.show();
+        return  pd;
+    }
+    
     public void attemptLogin(View view) {
-        BitrixAuthenticationTask task = new BitrixAuthenticationTask(
+        BitrixAuthenticationTask task = new BitrixAuthenticationTask(this, showProgressDialog(),
                 mEmailView.getEditableText().toString(),
                 mPasswordView.getEditableText().toString());
         task.execute();
-        boolean result = true;
-        try {
-            result = task.get();
-        } catch (InterruptedException|ExecutionException iex) {
-            Log.e(TAG, "Error logging in: " + iex.getMessage());
-            result = false;
-        }
-        if (result) {
-            SharedPreferences.Editor prefEditor = mPrefs.edit();
-            prefEditor.putString(PREF_USER_EMAIL, mEmailView.getEditableText().toString());
-            prefEditor.apply();
-            LeadConstants.getInstance().setSource("SELF");
-            Intent initialIntent = new Intent(this, InitialActivity.class);
-            startActivity(initialIntent);
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Invalid credentials")
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getText(android.R.string.ok), 
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                            }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
     }
 
     @Override
@@ -123,6 +107,29 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onNothingSelected(AdapterView<?> spinner) {
 
+    }
+
+    @Override
+    public void onTaskCompleted(Boolean result) {
+        if (result) {
+            SharedPreferences.Editor prefEditor = mPrefs.edit();
+            prefEditor.putString(PREF_USER_EMAIL, mEmailView.getEditableText().toString());
+            prefEditor.apply();
+            LeadConstants.getInstance().setSource("SELF");
+            Intent initialIntent = new Intent(this, InitialActivity.class);
+            startActivity(initialIntent);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Invalid credentials")
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getText(android.R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 }
 
