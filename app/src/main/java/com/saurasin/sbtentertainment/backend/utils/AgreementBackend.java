@@ -89,9 +89,12 @@ public class AgreementBackend extends SQLiteOpenHelper {
         ContentValues cv = getContentForParentInfo(entry);
         db.insert(PARENT_TABLE_NAME, null, cv);
         
-        for (ChildEntry ce : entry.getChildren()) {
-            cv = getContentForChild(ce, entry.getPhone());
-            db.insert(CHILDREN_TABLE_NAME, null, cv);
+        List<ChildEntry> childEntries = entry.getChildren();
+        if (childEntries != null) {
+            for (ChildEntry ce : childEntries) {
+                cv = getContentForChild(ce, entry.getPhone());
+                db.insert(CHILDREN_TABLE_NAME, null, cv);
+            }
         }
         db.close();
     }
@@ -101,12 +104,15 @@ public class AgreementBackend extends SQLiteOpenHelper {
         ContentValues cv = getContentForParentInfo(entry);
         db.update(PARENT_TABLE_NAME, cv, PARENT_PHONE + " = ?", new String[]{entry.getPhone()});
 
-        for (ChildEntry ce : entry.getChildren()) {
-            cv = getContentForChild(ce, entry.getPhone());
-            int n = db.update(CHILDREN_TABLE_NAME, cv, CHILDREN_PARENT_ID + " = ? AND "+ CHILDREN_NAME + " = ?", 
-                    new String[]{ entry.getPhone(), ce.getName()});
-            if (n == 0) {
-                db.insert(CHILDREN_TABLE_NAME, null, cv);
+        List<ChildEntry> childEntries = entry.getChildren();
+        if (childEntries != null) {
+            for (ChildEntry ce : childEntries) {
+                cv = getContentForChild(ce, entry.getPhone());
+                int n = db.update(CHILDREN_TABLE_NAME, cv, CHILDREN_PARENT_ID + " = ? AND " + CHILDREN_NAME + " = ?",
+                        new String[]{entry.getPhone(), ce.getName()});
+                if (n == 0) {
+                    db.insert(CHILDREN_TABLE_NAME, null, cv);
+                }
             }
         }
         db.close();
@@ -171,13 +177,15 @@ public class AgreementBackend extends SQLiteOpenHelper {
         }
 
         Cursor childrenCursor = db.rawQuery("select * from children where parent_id=\'" + phone + "\'", null);
-        childrenCursor.moveToFirst();
-        while (!childrenCursor.isAfterLast()) {
-            final String childName = childrenCursor.getString(childrenCursor.getColumnIndex(CHILDREN_NAME));
-            final String dob = childrenCursor.getString(childrenCursor.getColumnIndex(CHILDREN_DOB));
-            ChildEntry ce = new ChildEntry(childName, dob);
-            children.add(ce);
-            childrenCursor.moveToNext();
+        if (childrenCursor.getCount() > 0) {
+            childrenCursor.moveToFirst();
+            while (!childrenCursor.isAfterLast()) {
+                final String childName = childrenCursor.getString(childrenCursor.getColumnIndex(CHILDREN_NAME));
+                final String dob = childrenCursor.getString(childrenCursor.getColumnIndex(CHILDREN_DOB));
+                ChildEntry ce = new ChildEntry(childName, dob);
+                children.add(ce);
+                childrenCursor.moveToNext();
+            }
         }
         childrenCursor.close();
         

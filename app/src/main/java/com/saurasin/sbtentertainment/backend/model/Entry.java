@@ -30,7 +30,7 @@ public class Entry {
     private String emailModified;
     private List<ChildEntry> children;
     
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ssZ");
     
     public Entry(final String i, final String e, final String n, final String p, final String bdayV, 
                  final String kidsAct, final String s, final String eMod, final List<ChildEntry> ce) {

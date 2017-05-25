@@ -187,7 +187,7 @@ public class RegisterActivity extends AppCompatActivity {
             alert.show();
         } else {
             dSpinner.setSelection(date - 1);
-            mSpinner.setSelection(month - 1);
+            mSpinner.setSelection(month);
             ySpinner.setSelection(year - 2005);
         }
     }
