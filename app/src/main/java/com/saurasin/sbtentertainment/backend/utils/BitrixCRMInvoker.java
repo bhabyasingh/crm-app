@@ -30,7 +30,7 @@ public class BitrixCRMInvoker {
     private static String token = null;
     private static String refreshToken = null;
     
-    private static final int TIMEOUT = 2000;
+    private static final int TIMEOUT = 30000;
     
     private static final String BITRIX_AUTH_URL = "https://awesome.bitrix24.in/oauth/authorize/?response_type=code" + 
                     "&client_id=local.58eccdc4cf19f8.98218320&redirect_uri=app_URL";
