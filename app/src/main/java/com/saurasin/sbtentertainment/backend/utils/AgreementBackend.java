@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import java.util.List;
  * Created by saurasin on 1/26/17.
  */
 public class AgreementBackend extends SQLiteOpenHelper {
+    
+    final private static String TAG = AgreementBackend.class.getSimpleName();
     
     final private static String DATABASE_NAME = "awesomeplace.db";
     final private static String PARENT_TABLE_NAME = "parents";
@@ -42,7 +45,7 @@ public class AgreementBackend extends SQLiteOpenHelper {
         return instance;
     }
     
-    public AgreementBackend(Context context) {
+    private AgreementBackend(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
     @Override
@@ -110,27 +113,37 @@ public class AgreementBackend extends SQLiteOpenHelper {
     }
     
     public Entry getEntryByPhone(final String phone) {
+        Entry entry = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor parentCursor =  db.rawQuery( "select * from parents where phone=\'" + phone + "\'", null );
-        parentCursor.moveToFirst();
-        Entry entry = createEntryFromCursor(db,parentCursor);
+        if (parentCursor.getCount() > 0) {
+            parentCursor.moveToFirst();
+            entry = createEntryFromCursor(db, parentCursor);
+        }
         parentCursor.close();
         db.close();
         return entry;
     }
     
     public List<Entry> getUnsyncedEntries() {
-        SQLiteDatabase db = this.getReadableDatabase();
         List<Entry> entries = new ArrayList<>();
-        Cursor parentCursor =  db.rawQuery( "select * from parents where synced=\'NO\'", null );
-        parentCursor.moveToFirst();
-        while (!parentCursor.isAfterLast()) {
-            Entry entry = createEntryFromCursor(db, parentCursor);
-            entries.add(entry);
-            parentCursor.moveToNext();
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+
+            Cursor parentCursor = db.rawQuery("select * from parents where synced=\'NO\'", null);
+            if (parentCursor.getCount() > 0) {
+                parentCursor.moveToFirst();
+                while (!parentCursor.isAfterLast()) {
+                    Entry entry = createEntryFromCursor(db, parentCursor);
+                    entries.add(entry);
+                    parentCursor.moveToNext();
+                }
+            }
+            parentCursor.close();
+            db.close();
+        } catch (Exception ex) {
+            Log.e(TAG, "Error while get entries form db:: " + ex.getMessage());
         }
-        parentCursor.close();
-        db.close();
         return entries;
     }
     

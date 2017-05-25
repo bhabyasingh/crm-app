@@ -4,6 +4,7 @@ import com.saurasin.sbtentertainment.backend.tasks.BitrixAuthenticationTask;
 import com.saurasin.sbtentertainment.backend.utils.LeadConstants;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
     
     private static final String PREF_USER_EMAIL = "useremail";
     private static final String PREF_INVALID_USER_EMAIL = "Invalid";
+    private static final String PREF_LOGIN_PREFERENCES = "AuthPreferences";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,23 +52,15 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptLogin(textView);
                     return true;
                 }
                 return false;
             }
         });
         
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
         initializeSpinner();
-        mPrefs = getPreferences(MODE_PRIVATE);
+        mPrefs = getSharedPreferences(PREF_LOGIN_PREFERENCES, MODE_PRIVATE);
         final String userEmail = mPrefs.getString(PREF_USER_EMAIL, PREF_INVALID_USER_EMAIL);
         if (!PREF_INVALID_USER_EMAIL.equals(userEmail)) {
             mEmailView.setText(userEmail);
@@ -87,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onDestroy();
     }
     
-    private void attemptLogin() {
+    public void attemptLogin(View view) {
         BitrixAuthenticationTask task = new BitrixAuthenticationTask(
                 mEmailView.getEditableText().toString(),
                 mPasswordView.getEditableText().toString());
