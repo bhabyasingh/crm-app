@@ -171,9 +171,25 @@ public class RegisterActivity extends AppCompatActivity {
     
     private void setDateSpinners(final String dob, Spinner dSpinner, Spinner mSpinner, Spinner ySpinner) {
         String[] dobSplit = dob.split("/");
-        dSpinner.setSelection(Integer.parseInt(dobSplit[0]) - 1);
-        mSpinner.setSelection(Integer.parseInt(dobSplit[1]) - 1);
-        ySpinner.setSelection(Integer.parseInt(dobSplit[2]) - 2005);
+        int date = Integer.parseInt(dobSplit[0]);
+        int month = Integer.parseInt(dobSplit[1]);
+        int year = Integer.parseInt(dobSplit[2]);
+        if (date > 31 || month > 12  || year > Calendar.getInstance().get(Calendar.YEAR)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Invalid date returned for child date of birth. Please input correct date.")
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getText(android.R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            dSpinner.setSelection(date - 1);
+            mSpinner.setSelection(month - 1);
+            ySpinner.setSelection(year - 2005);
+        }
     }
     
     
