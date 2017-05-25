@@ -1,11 +1,4 @@
-/*
- * Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- */
-
 package com.saurasin.sbtentertainment.backend.utils;
-
-import android.support.v4.util.LogWriter;
 
 import java.util.HashMap;
 import java.util.Map;

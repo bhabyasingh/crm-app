@@ -1,15 +1,7 @@
-/*
- * Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- */
-
 package com.saurasin.sbtentertainment.backend.tasks;
 
 import com.saurasin.sbtentertainment.backend.utils.BitrixCRMInvoker;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 
 
@@ -29,17 +21,6 @@ public class BitrixAuthenticationTask extends AsyncTask<String, Integer, Boolean
 
     @Override
     protected Boolean doInBackground(String... params) {
-        Boolean res = BitrixCRMInvoker.initiate(username, password);
-        return res;
-    }
-
-    @Override
-    protected void onPreExecute(){
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(Boolean result){
-        super.onPostExecute(result);
+        return BitrixCRMInvoker.initiate(username, password);
     }
 }

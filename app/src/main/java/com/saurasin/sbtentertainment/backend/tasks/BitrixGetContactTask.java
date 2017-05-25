@@ -8,9 +8,6 @@ package com.saurasin.sbtentertainment.backend.tasks;
 import com.saurasin.sbtentertainment.backend.model.Entry;
 import com.saurasin.sbtentertainment.backend.utils.BitrixCRMInvoker;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 
 /**
@@ -26,15 +23,5 @@ public class BitrixGetContactTask extends AsyncTask<String, Integer, Entry> {
     @Override
     protected Entry doInBackground(String... params) {
         return BitrixCRMInvoker.getEntryFromBackend(mobileNumber);
-    }
-
-    @Override
-    protected void onPreExecute(){
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(Entry result){
-        super.onPostExecute(result);
     }
 }

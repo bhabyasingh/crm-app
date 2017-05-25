@@ -37,7 +37,8 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:id="@+id/phone_number_layout"
             >
-        <EditText android:layout_width="match_parent"
+        <android.support.design.widget.TextInputEditText 
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:textSize="@dimen/initial_screen_button_text_size"
                   android:hint="@string/phone_number_text"

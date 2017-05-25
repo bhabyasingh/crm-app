@@ -1,15 +1,8 @@
-/*
- * Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- */
 
 package com.saurasin.sbtentertainment.backend.tasks;
 
 import com.saurasin.sbtentertainment.backend.utils.SmsSender;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 
 /**
@@ -23,15 +16,5 @@ public class SmsSenderTask extends AsyncTask<String, Integer, Long> {
         final String message = params[1];
         SmsSender.sendSms(message, number);
         return 0L;
-    }
-
-    @Override
-    protected void onPreExecute(){
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(Long result){
-        super.onPostExecute(result);
     }
 }

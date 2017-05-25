@@ -1,8 +1,3 @@
-/*
- * Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- */
-
 package com.saurasin.sbtentertainment.backend.utils;
 
 import com.saurasin.sbtentertainment.backend.model.ChildEntry;
@@ -120,6 +115,7 @@ public class AgreementBackend extends SQLiteOpenHelper {
         parentCursor.moveToFirst();
         Entry entry = createEntryFromCursor(db,parentCursor);
         parentCursor.close();
+        db.close();
         return entry;
     }
     
@@ -134,6 +130,7 @@ public class AgreementBackend extends SQLiteOpenHelper {
             parentCursor.moveToNext();
         }
         parentCursor.close();
+        db.close();
         return entries;
     }
     
