@@ -21,6 +21,8 @@ import java.util.TimeZone;
 public class SmsSender {
     
     private final static String TAG = SmsSender.class.getSimpleName();
+    private static final int TIMEOUT = 30000;
+    
     public static void sendSms(final String message, final String phoneNumber) {
         try
         {
@@ -32,6 +34,8 @@ public class SmsSender {
             data +="&type=" + URLEncoder.encode("3", "UTF-8");
             URL url = new URL("http://login.bulksmsgateway.in/sendmessage.php?"+data);
             URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(TIMEOUT);
+            conn.setReadTimeout(TIMEOUT);
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(data);
@@ -49,7 +53,7 @@ public class SmsSender {
         }
         catch (Exception e)
         {
-           Log.e(TAG, "Error SMS " + e);
+           Log.e(TAG, "Error Sending SMS:: " + e.getMessage());
         }
     }
 

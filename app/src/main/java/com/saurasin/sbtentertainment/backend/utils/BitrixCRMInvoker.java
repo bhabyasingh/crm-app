@@ -15,6 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -56,6 +57,13 @@ public class BitrixCRMInvoker {
     private static final String BITRIX_CRM_UPDATE_CONTACT_POST = "https://awesome.bitrix24.in/rest/crm.lead.update";
 
     
+    private static HttpsURLConnection setupHttpConnection(final URL url) throws IOException{
+        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        conn.setInstanceFollowRedirects(true);
+        conn.setConnectTimeout(TIMEOUT);
+        conn.setReadTimeout(TIMEOUT);
+        return conn;
+    }
     
     private static String getIdForMobileNumber(final String mobileNumber) {
         String id = null;
@@ -63,10 +71,7 @@ public class BitrixCRMInvoker {
         try {
             final String crmQuery = String.format(BITRIX_CRM_PHONE_NUMBER, token, mobileNumber);
             URL url = new URL(crmQuery);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setInstanceFollowRedirects(true);
-            conn.setConnectTimeout(TIMEOUT);
-
+            HttpsURLConnection conn = setupHttpConnection(url);
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;
             StringBuilder builder = new StringBuilder();
@@ -109,9 +114,7 @@ public class BitrixCRMInvoker {
             final String customerId = getIdForMobileNumber(mobileNumber);
             final String crmContactGetQuery = String.format(BITRIX_CRM_BY_ID, token, customerId);
             URL url = new URL(crmContactGetQuery);
-            HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
-            conn.setConnectTimeout(TIMEOUT);
-            conn.setInstanceFollowRedirects(true);
+            HttpsURLConnection conn = setupHttpConnection(url);
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder contactStringBuilder = new StringBuilder();
             String line;
@@ -125,6 +128,14 @@ public class BitrixCRMInvoker {
         }
         
         return null;
+    }
+    
+    private static void setupPostRequest(HttpsURLConnection conn, int datalen) throws ProtocolException {
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty( "Content-Type", "application/json");
+        conn.setRequestProperty( "charset", "utf-8");
+        conn.setRequestProperty( "Content-Length", Integer.toString( datalen ));
+        conn.setUseCaches( false );
     }
     
     public static String saveEntryToBackend(final Entry entry) {
@@ -148,17 +159,12 @@ public class BitrixCRMInvoker {
             Log.e(TAG, "Error adding ID to json:: " + jsEx.getMessage());
         }
         
-        Log.e(TAG, postDataObj.toString());
+        Log.d(TAG, postDataObj.toString());
         try {
             URL url = new URL(crmQuery);
-            final byte[] postData = postDataObj.toString().getBytes(Charset.forName("UTF-8")); 
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setConnectTimeout(TIMEOUT);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty( "Content-Type", "application/json");
-            conn.setRequestProperty( "charset", "utf-8");
-            conn.setRequestProperty( "Content-Length", Integer.toString( postData.length ));
-            conn.setUseCaches( false );
+            HttpsURLConnection conn = setupHttpConnection(url);
+            final byte[] postData = postDataObj.toString().getBytes(Charset.forName("UTF-8"));
+            setupPostRequest(conn, postData.length);
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
             try {
                 wr.write( postData );
@@ -198,8 +204,7 @@ public class BitrixCRMInvoker {
         boolean result;
         try {
             URL url = new URL(BITRIX_AUTH_URL);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setConnectTimeout(TIMEOUT);
+            HttpsURLConnection conn = setupHttpConnection(url);
             final String credentials = username + ":" + password;
             String encoded = Base64.encodeToString(credentials.getBytes(Charset.forName("UTF-8")), 0);
             conn.setRequestProperty("Authorization", "Basic "+encoded);
@@ -219,8 +224,7 @@ public class BitrixCRMInvoker {
             if (!TextUtils.isEmpty(code)) {
                 final String tokenUrl = String.format(BITRIX_TOKEN_URL, code);
                 url = new URL(tokenUrl);
-                conn = (HttpsURLConnection) url.openConnection();
-                conn.setInstanceFollowRedirects(true);
+                conn = setupHttpConnection(url);
                 result = setTokens(conn.getInputStream());
             } else {
                 result = false;
@@ -237,9 +241,7 @@ public class BitrixCRMInvoker {
         try {
             final String tokenUrl = String.format(BITRIX_REFRESH_TOKEN_URL, refreshToken);
             URL url = new URL(tokenUrl);
-            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-            conn.setInstanceFollowRedirects(true);
-            conn.setConnectTimeout(TIMEOUT);
+            HttpsURLConnection conn = setupHttpConnection(url);
             result = setTokens(conn.getInputStream());
         } catch (IOException ioEx) {
             result = false;
