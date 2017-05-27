@@ -20,7 +20,7 @@ public class AgreementBackend extends SQLiteOpenHelper {
     
     final private static String TAG = AgreementBackend.class.getSimpleName();
     
-    final private static String DATABASE_NAME = "awesomeplace.db";
+    final private static String DATABASE_NAME = "awesomeplacedata.db";
     final private static String PARENT_TABLE_NAME = "parents";
     final private static String CRM_ID = "id";
     final private static String PARENT_NAME = "name";
@@ -87,6 +87,7 @@ public class AgreementBackend extends SQLiteOpenHelper {
     public void addEntry(final Entry entry) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = getContentForParentInfo(entry);
+        db.beginTransaction();
         db.insert(PARENT_TABLE_NAME, null, cv);
         
         List<ChildEntry> childEntries = entry.getChildren();
@@ -96,12 +97,15 @@ public class AgreementBackend extends SQLiteOpenHelper {
                 db.insert(CHILDREN_TABLE_NAME, null, cv);
             }
         }
+        db.endTransaction();
+        
         db.close();
     }
     
     public void updateEntry(final Entry entry) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = getContentForParentInfo(entry);
+        db.beginTransaction();
         db.update(PARENT_TABLE_NAME, cv, PARENT_PHONE + " = ?", new String[]{entry.getPhone()});
 
         List<ChildEntry> childEntries = entry.getChildren();
@@ -115,6 +119,7 @@ public class AgreementBackend extends SQLiteOpenHelper {
                 }
             }
         }
+        db.endTransaction();
         db.close();
     }
     

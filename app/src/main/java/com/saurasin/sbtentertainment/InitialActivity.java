@@ -2,6 +2,8 @@ package com.saurasin.sbtentertainment;
 
 import com.saurasin.sbtentertainment.backend.CrmUpdater;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -40,10 +42,24 @@ public class InitialActivity extends AppCompatActivity {
     }
     
     private void openNextScreen() {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        intent.putExtra(RegisterActivity.MOBILE_INTENT_EXTRA, mobileNumberET.getText().toString());
-        mobileNumberET.setText("");
-        startActivity(intent);
+        final String mobileNumber = mobileNumberET.getText().toString().trim();
+        if (mobileNumber.length() == 10) {
+            Intent intent = new Intent(this, RegisterActivity.class);
+            intent.putExtra(RegisterActivity.MOBILE_INTENT_EXTRA, mobileNumber);
+            mobileNumberET.setText("");
+            startActivity(intent);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("The number entered is invalid. Please enter a 10 digit valid mobile number")
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getText(android.R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
     
     @Override

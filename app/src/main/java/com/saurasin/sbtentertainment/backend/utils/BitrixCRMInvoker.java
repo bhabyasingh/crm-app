@@ -208,8 +208,7 @@ public class BitrixCRMInvoker {
             final String credentials = username + ":" + password;
             String encoded = Base64.encodeToString(credentials.getBytes(Charset.forName("UTF-8")), 0);
             conn.setRequestProperty("Authorization", "Basic "+encoded);
-
-            conn.setInstanceFollowRedirects(true);
+            conn.getDoOutput();
             final String location = conn.getHeaderField("Location");
 
             String code = null;
