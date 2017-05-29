@@ -87,17 +87,21 @@ public class AgreementBackend extends SQLiteOpenHelper {
     public void addEntry(final Entry entry) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = getContentForParentInfo(entry);
-        db.beginTransaction();
-        db.insert(PARENT_TABLE_NAME, null, cv);
-        
-        List<ChildEntry> childEntries = entry.getChildren();
-        if (childEntries != null) {
-            for (ChildEntry ce : childEntries) {
-                cv = getContentForChild(ce, entry.getPhone());
-                db.insert(CHILDREN_TABLE_NAME, null, cv);
+        try {
+            db.beginTransaction();
+            db.insert(PARENT_TABLE_NAME, null, cv);
+
+            List<ChildEntry> childEntries = entry.getChildren();
+            if (childEntries != null) {
+                for (ChildEntry ce : childEntries) {
+                    cv = getContentForChild(ce, entry.getPhone());
+                    db.insert(CHILDREN_TABLE_NAME, null, cv);
+                }
             }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
-        db.endTransaction();
         
         db.close();
     }
@@ -105,21 +109,25 @@ public class AgreementBackend extends SQLiteOpenHelper {
     public void updateEntry(final Entry entry) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = getContentForParentInfo(entry);
-        db.beginTransaction();
-        db.update(PARENT_TABLE_NAME, cv, PARENT_PHONE + " = ?", new String[]{entry.getPhone()});
+        try {
+            db.beginTransaction();
+            db.update(PARENT_TABLE_NAME, cv, PARENT_PHONE + " = ?", new String[]{entry.getPhone()});
 
-        List<ChildEntry> childEntries = entry.getChildren();
-        if (childEntries != null) {
-            for (ChildEntry ce : childEntries) {
-                cv = getContentForChild(ce, entry.getPhone());
-                int n = db.update(CHILDREN_TABLE_NAME, cv, CHILDREN_PARENT_ID + " = ? AND " + CHILDREN_NAME + " = ?",
-                        new String[]{entry.getPhone(), ce.getName()});
-                if (n == 0) {
-                    db.insert(CHILDREN_TABLE_NAME, null, cv);
+            List<ChildEntry> childEntries = entry.getChildren();
+            if (childEntries != null) {
+                for (ChildEntry ce : childEntries) {
+                    cv = getContentForChild(ce, entry.getPhone());
+                    int n = db.update(CHILDREN_TABLE_NAME, cv, CHILDREN_PARENT_ID + " = ? AND " + CHILDREN_NAME + " = ?",
+                            new String[]{entry.getPhone(), ce.getName()});
+                    if (n == 0) {
+                        db.insert(CHILDREN_TABLE_NAME, null, cv);
+                    }
                 }
             }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
-        db.endTransaction();
         db.close();
     }
     

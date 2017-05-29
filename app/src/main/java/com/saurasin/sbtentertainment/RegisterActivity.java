@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,16 +27,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by saurasin on 1/26/17.
  */
 public class RegisterActivity extends AppCompatActivity implements onTaskCompleted<Entry> {
-    
-    final static String TAG = RegisterActivity.class.getSimpleName();
     
     public static final String MOBILE_INTENT_EXTRA = "MOBILE_INTENT_EXTRA";
     
@@ -191,7 +185,7 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
             alert.show();
         } else {
             dSpinner.setSelection(date - 1);
-            mSpinner.setSelection(month);
+            mSpinner.setSelection(month - 1);
             ySpinner.setSelection(year - 2005);
         }
     }
