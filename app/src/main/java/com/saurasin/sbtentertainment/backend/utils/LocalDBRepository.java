@@ -6,6 +6,7 @@ import com.saurasin.sbtentertainment.backend.model.Entry;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -16,9 +17,9 @@ import java.util.List;
 /**
  * Created by saurasin on 1/26/17.
  */
-public class AgreementBackend extends SQLiteOpenHelper {
+public class LocalDBRepository extends SQLiteOpenHelper {
     
-    final private static String TAG = AgreementBackend.class.getSimpleName();
+    final private static String TAG = LocalDBRepository.class.getSimpleName();
     
     final private static String DATABASE_NAME = "awesomeplacedata.db";
     final private static String PARENT_TABLE_NAME = "parents";
@@ -36,16 +37,16 @@ public class AgreementBackend extends SQLiteOpenHelper {
     final private static String CHILDREN_DOB = "dob";
     final private static String CHILDREN_PARENT_ID = "parent_id";
     
-    private static volatile AgreementBackend instance;
+    private static volatile LocalDBRepository instance;
     
-    public static synchronized AgreementBackend getInstance(Context context) {
+    public static synchronized LocalDBRepository getInstance(Context context) {
         if (instance == null) {
-            instance =  new AgreementBackend(context);
+            instance =  new LocalDBRepository(context);
         }
         return instance;
     }
     
-    private AgreementBackend(Context context) {
+    private LocalDBRepository(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
     @Override
@@ -84,29 +85,35 @@ public class AgreementBackend extends SQLiteOpenHelper {
     }
     
     
-    public void addEntry(final Entry entry) {
+    public boolean addEntry(final Entry entry) {
+        boolean result = true;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = getContentForParentInfo(entry);
         try {
             db.beginTransaction();
-            db.insert(PARENT_TABLE_NAME, null, cv);
+            db.insertOrThrow(PARENT_TABLE_NAME, null, cv);
 
             List<ChildEntry> childEntries = entry.getChildren();
             if (childEntries != null) {
                 for (ChildEntry ce : childEntries) {
                     cv = getContentForChild(ce, entry.getPhone());
-                    db.insert(CHILDREN_TABLE_NAME, null, cv);
+                    db.insertOrThrow(CHILDREN_TABLE_NAME, null, cv);
                 }
             }
             db.setTransactionSuccessful();
+        } catch (SQLException ex) {
+            Log.e(TAG, "Unable to persist in DB:: " + ex.getMessage());
+            result = false;
         } finally {
             db.endTransaction();
         }
         
         db.close();
+        return result;
     }
     
-    public void updateEntry(final Entry entry) {
+    public boolean updateEntry(final Entry entry) {
+        boolean result = true;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = getContentForParentInfo(entry);
         try {
@@ -120,15 +127,19 @@ public class AgreementBackend extends SQLiteOpenHelper {
                     int n = db.update(CHILDREN_TABLE_NAME, cv, CHILDREN_PARENT_ID + " = ? AND " + CHILDREN_NAME + " = ?",
                             new String[]{entry.getPhone(), ce.getName()});
                     if (n == 0) {
-                        db.insert(CHILDREN_TABLE_NAME, null, cv);
+                        db.insertOrThrow(CHILDREN_TABLE_NAME, null, cv);
                     }
                 }
             }
             db.setTransactionSuccessful();
+        } catch (SQLException ex) {
+            Log.e(TAG, "Unable to persist in DB:: " + ex.getMessage());
+            result = false;
         } finally {
             db.endTransaction();
         }
         db.close();
+        return result;
     }
     
     public Entry getEntryByPhone(final String phone) {

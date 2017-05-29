@@ -1,7 +1,7 @@
 package com.saurasin.sbtentertainment;
 
 import com.saurasin.sbtentertainment.backend.tasks.onTaskCompleted;
-import com.saurasin.sbtentertainment.backend.utils.AgreementBackend;
+import com.saurasin.sbtentertainment.backend.utils.LocalDBRepository;
 import com.saurasin.sbtentertainment.backend.model.ChildEntry;
 import com.saurasin.sbtentertainment.backend.model.Entry;
 import com.saurasin.sbtentertainment.backend.tasks.BitrixGetContactTask;
@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     private Button doneButon;
     
     private List<ChildEntry> children;
-    private AgreementBackend backend;
+    private LocalDBRepository backend;
     private String mobileNumberFromIntent;
     
     private final int AGREEMENT_REQUEST_CODE = 1;
@@ -86,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         doneButon = (Button) findViewById(R.id.submit_button);
         children = new ArrayList<>();
 
-        backend = AgreementBackend.getInstance(this);
+        backend = LocalDBRepository.getInstance(this);
         
         
         mobileNumberFromIntent = getIntent().getStringExtra(MOBILE_INTENT_EXTRA);
@@ -285,8 +285,22 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     @Override
     public void onTaskCompleted(Entry entry) {
         if (entry != null) {
-            backend.addEntry(entry);
-            getDataFromDB();
+            boolean res = backend.addEntry(entry);
+            if (res) {
+                getDataFromDB();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Invalid date returned for child date of birth. Please input correct date.")
+                        .setCancelable(false)
+                        .setPositiveButton(getResources().getText(android.R.string.ok),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        getParent().finish();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
         }
     }
 }

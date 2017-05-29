@@ -3,7 +3,7 @@ package com.saurasin.sbtentertainment.backend;
 
 import com.saurasin.sbtentertainment.backend.model.Entry;
 import com.saurasin.sbtentertainment.backend.tasks.BitrixUpdateContactTask;
-import com.saurasin.sbtentertainment.backend.utils.AgreementBackend;
+import com.saurasin.sbtentertainment.backend.utils.LocalDBRepository;
 
 import android.app.Service;
 import android.content.Intent;
@@ -60,7 +60,7 @@ public class CrmUpdater extends Service {
 
                 @Override
                 public void run() {
-                    List<Entry> entries = AgreementBackend.getInstance(getApplicationContext()).getUnsyncedEntries();
+                    List<Entry> entries = LocalDBRepository.getInstance(getApplicationContext()).getUnsyncedEntries();
                     for(Entry entry : entries) {
                         BitrixUpdateContactTask task = new BitrixUpdateContactTask(entry);
                         task.execute();
@@ -70,7 +70,7 @@ public class CrmUpdater extends Service {
                                 entry.setSynced("YES");
                                 entry.setEmailModified("NO");
                                 entry.setId(crmId);
-                                AgreementBackend.getInstance(getApplicationContext()).updateEntry(entry);
+                                LocalDBRepository.getInstance(getApplicationContext()).updateEntry(entry);
                             }
                         } catch (InterruptedException|ExecutionException ex) {
                             Log.e(TAG, "Error saving to backend:: " + ex.getMessage() );
