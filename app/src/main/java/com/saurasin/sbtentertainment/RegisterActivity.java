@@ -249,11 +249,7 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
                 new DatePickerDialog.OnDateSetListener() {
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();                 
-                newDate.set(year, monthOfYear, dayOfMonth);
-
-                SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd/MM/yyyy");
-                dobControl.setText(dateFormatter.format(newDate.getTime()));
+                dobControl.setText(String.format("%d/%d/%d", dayOfMonth, monthOfYear+1, year));
             }
 
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));

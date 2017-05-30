@@ -103,7 +103,7 @@ public class Entry {
                 Date dt = simpleDateFormat.parse(childsBday);
                 GregorianCalendar cal = new GregorianCalendar();
                 cal.setGregorianChange(dt);
-                childsBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth(), 1900 + dt.getYear());
+                childsBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth()+1, 1900 + dt.getYear());
             } catch(ParseException ex) {
                 Log.e(TAG, "Error parsing date:: " + ex.getMessage());
             }
