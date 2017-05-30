@@ -26,8 +26,8 @@ public class SmsSender {
     public static void sendSms(final String message, final String phoneNumber) {
         try
         {
-            String data="user=" + URLEncoder.encode("ssisodia", "UTF-8");
-            data +="&password=" + URLEncoder.encode("gudds260", "UTF-8");
+            String data="user=" + URLEncoder.encode("udayjose", "UTF-8");
+            data +="&password=" + URLEncoder.encode("Welcome123!", "UTF-8");
             data +="&message=" + URLEncoder.encode(message, "UTF-8");
             data +="&sender=" + URLEncoder.encode("AWSPLC", "UTF-8");
             data +="&mobile=" + URLEncoder.encode(phoneNumber, "UTF-8");
