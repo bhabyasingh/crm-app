@@ -13,12 +13,12 @@
     <string name="import_data_button_text">Import Data</string>
     <string name="agree_button_text">I Agree</string>
     <string name="do_not_agree_button_text">I do not Agree</string>
-    <string name="parent_name">*Parent name</string>
+    <string name="parent_name"><sup>*</sup>Parent name</string>
     <string name="parent_email">Email</string>
-    <string name="parent_phone">*Phone</string>
+    <string name="parent_phone"><sup>*</sup>Phone</string>
     <string name="children">Children</string>
-    <string name="childone_name">*Child\'s name</string>
-    <string name="childone_dob">*Child\'s Date of Birth</string>
+    <string name="childone_name"><sup>*</sup>Child\'s name</string>
+    <string name="childone_dob"><sup>*</sup>Child\'s Date of Birth</string>
     <string name="childtwo_name">Second Child\'s name</string>
     <string name="childtwo_dob">Second Child\'s Date of Birth</string>
     <string name="childone_details_missing">Enter details of atleast one child</string>
@@ -38,7 +38,7 @@
     <string name="parent_location">Location</string>
     <string name="parent_notes">Notes</string>
     <string name="phone_number_text">Phone Number</string>
-    <string name="terms_and_condition_agree">*I agree with\u0020</string>
+    <string name="terms_and_condition_agree"><sup>*</sup>I agree with\u0020</string>
     <string name="terms_link">terms and condition</string>
     <string name="terms_not_accepted">Please accept terms and condition to proceed</string>
     <string name="title_activity_login">Sign in</string>

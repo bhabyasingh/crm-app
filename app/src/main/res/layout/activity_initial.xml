@@ -21,6 +21,8 @@
             android:id="@+id/register_btn"
             android:clickable="true"
             android:onClick="onRegister"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@android:color/background_light"
             android:textStyle="bold"/>
     <ImageView android:layout_width="match_parent" 
                android:layout_height="132dp"

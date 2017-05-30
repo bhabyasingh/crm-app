@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -21,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -69,9 +67,8 @@ public class LoginActivity extends AppCompatActivity
     
     private void initializeSpinner() {
         Spinner locationSpinner = (Spinner) findViewById(R.id.location_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.location_array, R.layout.spinner_layout);
-        adapter.setDropDownViewResource(R.layout.spinner_layout);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.location_array,
+                R.layout.spinner_layout);
         locationSpinner.setAdapter(adapter);
         locationSpinner.setOnItemSelectedListener(this);
     }

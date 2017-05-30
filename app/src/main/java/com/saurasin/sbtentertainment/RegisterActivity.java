@@ -96,7 +96,6 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     private void initializeDOBSpinners() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.months_array, R.layout.spinner_layout);
-        adapter.setDropDownViewResource(R.layout.spinner_layout);
         childonedobMonth.setAdapter(adapter);
         childtwodobMonth.setAdapter(adapter);
         ArrayList<String> years = new ArrayList<>();
@@ -107,7 +106,6 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         }
 
         ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, years);
-        yearsAdapter.setDropDownViewResource(R.layout.spinner_layout);
         childonedobYear.setAdapter(yearsAdapter);
         childtwodobYear.setAdapter(yearsAdapter);
 
@@ -118,7 +116,6 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         }
 
         ArrayAdapter<String> datesAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, dates);
-        datesAdapter.setDropDownViewResource(R.layout.spinner_layout);
         childonedobDay.setAdapter(datesAdapter);
         childtwodobDay.setAdapter(datesAdapter);
     }
