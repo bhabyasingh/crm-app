@@ -22,15 +22,11 @@
     <string name="childtwo_name">Second Child\'s name</string>
     <string name="childtwo_dob">Second Child\'s Date of Birth</string>
     <string name="childone_details_missing">Enter details of atleast one child</string>
-    <string name="agreement_text">I hereby agree that any child/children in my care, are monitored by me at all times. I
-        will ensure that they do not behave in any manner so as to cause any accident or a mishap to themselves or
-        others. I take full responsibility for their safety and will not hold management/staff of <b>Awesome Place</b>liable
-        for any injury or accident caused.\n\nI am happy with the play area safety factors, have reviewed hygiene
-        schedule (ask staff for details) and am happy with all aspects, only after which I am allowing children (&amp;
-        myself if child &lt; 3 yrs) in my care to enter.\n\nI agree to comply with all the rules and regulations of
-        Awesome Place, and understand that I may be asked to leave if I or the child/children under my supervision do
-        not observe these rules.\n\nI agree to pay Rs.500/- if the child does potty or Rs.200/- if the child urinates or
-        vomit in <b>Awesome Place</b> premises as housekeeping charges.
+    <string name="agreement_text">I am happy with the play area safety factors and will not hold management of 
+        <b>Awesome Place</b> liable for any injury or accident caused while my child is playing in the playarea 
+        or get into a conflict with another child/Parent in the playarea.\n\nI agree to STAY ALERT on phone and 
+        RESPOND if I have dropped my child and moved away from awesome place premises.\n\nI agree to pay Rs.500/-
+        if the child does potty or Rs.200/- if the child urinates or vomit in the premises as housekeeping charges.
     </string>
     <string name="confirmation_sms">Thank you for registering with Awesome Place.</string>
     <string name="interested_in_bday">Are you interested in Birthday venue?</string>

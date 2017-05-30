@@ -10,6 +10,7 @@ import com.saurasin.sbtentertainment.backend.utils.SmsSender;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,13 +18,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -39,17 +40,14 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     private EditText emailET;
     private EditText nameET;
     private EditText childonenameET;
-    private Spinner childonedobMonth;
-    private Spinner childonedobDay;
-    private Spinner childonedobYear;
+    private EditText childonedobET;
     private EditText childtwonameET;
-    private Spinner childtwodobMonth;
-    private Spinner childtwodobDay;
-    private Spinner childtwodobYear;
+    private EditText childtwodobET;
     private CheckBox bdayVenueCB;
     private CheckBox kidsActivitiesCB;
     private CheckBox termsAndConditionCB;
     private Button doneButon;
+    
     
     private List<ChildEntry> children;
     private LocalDBRepository backend;
@@ -73,13 +71,9 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         emailET = (EditText) findViewById(R.id.parentEmailEdit);
         nameET = (EditText) findViewById(R.id.parentNameEdit);
         childonenameET = (EditText) findViewById(R.id.childone_name_edit);
-        childonedobMonth = (Spinner) findViewById(R.id.chileone_dob_month);
-        childonedobDay = (Spinner) findViewById(R.id.chileone_dob_date);
-        childonedobYear = (Spinner) findViewById(R.id.chileone_dob_year);
+        childonedobET  = (EditText) findViewById(R.id.childone_dob);
         childtwonameET = (EditText) findViewById(R.id.childtwo_name_edit);
-        childtwodobMonth = (Spinner) findViewById(R.id.chiletwo_dob_month);
-        childtwodobDay = (Spinner) findViewById(R.id.chiletwo_dob_date);
-        childtwodobYear = (Spinner) findViewById(R.id.chiletwo_dob_year);
+        childtwodobET  = (EditText) findViewById(R.id.childtwo_dob);
         bdayVenueCB = (CheckBox) findViewById(R.id.checkbox_bday);
         kidsActivitiesCB = (CheckBox) findViewById(R.id.checkbox_kids_activities);
         termsAndConditionCB = (CheckBox) findViewById(R.id.checkbox_terms);
@@ -90,34 +84,6 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         
         
         mobileNumberFromIntent = getIntent().getStringExtra(MOBILE_INTENT_EXTRA);
-        initializeDOBSpinners();
-    }
-    
-    private void initializeDOBSpinners() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.months_array, R.layout.spinner_layout);
-        childonedobMonth.setAdapter(adapter);
-        childtwodobMonth.setAdapter(adapter);
-        ArrayList<String> years = new ArrayList<>();
-        int thisYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = 2005; i <= thisYear; i++)
-        {
-            years.add(String.valueOf(i));
-        }
-
-        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, years);
-        childonedobYear.setAdapter(yearsAdapter);
-        childtwodobYear.setAdapter(yearsAdapter);
-
-        ArrayList<String> dates = new ArrayList<>();
-        for (int i = 1; i <= 31; i++)
-        {
-            dates.add(String.valueOf(i));
-        }
-
-        ArrayAdapter<String> datesAdapter = new ArrayAdapter<>(this, R.layout.spinner_layout, dates);
-        childonedobDay.setAdapter(datesAdapter);
-        childtwodobDay.setAdapter(datesAdapter);
     }
 
     private ProgressDialog showProgressDialog(final String message) {
@@ -133,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     private void getDataFromDB() {
         Entry entry = backend.getEntryByPhone(phoneET.getEditableText().toString());
         if (entry == null) {
-            BitrixGetContactTask task = new BitrixGetContactTask(showProgressDialog("Fetching data from backend .."), 
+            BitrixGetContactTask task = new BitrixGetContactTask(showProgressDialog("Loading .."), 
                     this, phoneET.getEditableText().toString());
             task.execute();
         } else {
@@ -149,44 +115,18 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         kidsActivitiesCB.setChecked("YES".equals(entry.getInterestInKidsActivities()));
         ChildEntry childOne = entry.getChildren().get(0);
         childonenameET.setText(childOne.getName());
-        setDateSpinners(childOne.getDOB(), childonedobDay, childonedobMonth, childonedobYear);
+        childonedobET.setText(childOne.getDOB());
         if (entry.getChildren().size() > 1) {
             ChildEntry childTwo = entry.getChildren().get(1);
             childtwonameET.setText(childTwo.getName());
-
-            setDateSpinners(childTwo.getDOB(), childtwodobDay, childtwodobMonth, childtwodobYear);
-        } else {
-            setDateSpinners("1/1/1900", childtwodobDay, childtwodobMonth, childtwodobYear);
-        }
+            childtwodobET.setText(childTwo.getDOB());
+        } 
+        
         termsAndConditionCB.setChecked(agreementAccepted);
         doneButon.setText(R.string.done_button_text);
         phoneET.setEnabled(false);
         emailFromBackend = entry.getEmail();
     }
-    
-    private void setDateSpinners(final String dob, Spinner dSpinner, Spinner mSpinner, Spinner ySpinner) {
-        String[] dobSplit = dob.split("/");
-        int date = Integer.parseInt(dobSplit[0]);
-        int month = Integer.parseInt(dobSplit[1]);
-        int year = Integer.parseInt(dobSplit[2]);
-        if (date > 31 || month > 12  || year > Calendar.getInstance().get(Calendar.YEAR)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Invalid date returned for child date of birth. Please input correct date.")
-                    .setCancelable(false)
-                    .setPositiveButton(getResources().getText(android.R.string.ok),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-            AlertDialog alert = builder.create();
-            alert.show();
-        } else {
-            dSpinner.setSelection(date - 1);
-            mSpinner.setSelection(month - 1);
-            ySpinner.setSelection(year - 2005);
-        }
-    }
-    
     
     public void onSave(View v) {
         if (termsAndConditionCB.isChecked()) {
@@ -195,14 +135,9 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
             final String phone = phoneET.getEditableText().toString();
             final String email = emailET.getEditableText().toString();
             final String childonename = childonenameET.getEditableText().toString();
-            final String childonedob = String.format("%d/%d/%d", 
-                    childonedobDay.getSelectedItemPosition() + 1, childonedobMonth.getSelectedItemPosition() + 1,
-                    childonedobYear.getSelectedItemPosition() + 2005);
+            final String childonedob = childonedobET.getEditableText().toString();
             final String childtwoname = childtwonameET.getEditableText().toString();
-            final String childtwodob = String.format("%d/%d/%d",
-                    childtwodobDay.getSelectedItemPosition() + 1, childtwodobMonth.getSelectedItemPosition() + 1,
-                    childtwodobYear.getSelectedItemPosition() + 2005);
-
+            final String childtwodob = childtwodobET.getEditableText().toString();
             if (!TextUtils.isEmpty(childtwoname) && !TextUtils.isEmpty(childtwodob)) {
                 ChildEntry ce = new ChildEntry(childtwoname, childtwodob);
                 children.add(ce);
@@ -299,6 +234,31 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
                 alert.show();
             }
         }
+    }
+    
+    public void onChildDOB(View v) {
+        final EditText dobControl = (EditText)v;
+        final String date = dobControl.getEditableText().toString();
+        Calendar newCalendar = Calendar.getInstance();
+        if (!TextUtils.isEmpty(date)) {
+            String[] splitDates = date.split("/");
+            newCalendar.set(Integer.parseInt(splitDates[2]),Integer.parseInt(splitDates[1])-1,
+                    Integer.parseInt(splitDates[0]));
+        }
+        DatePickerDialog datePickerDlg = new DatePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog, 
+                new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();                 
+                newDate.set(year, monthOfYear, dayOfMonth);
+
+                SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd/MM/yyyy");
+                dobControl.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDlg.getDatePicker().setForegroundGravity(11);
+        datePickerDlg.show();
     }
 }
 
