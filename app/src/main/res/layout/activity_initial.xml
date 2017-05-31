@@ -12,18 +12,6 @@
         android:background="@android:color/background_light"
         tools:context="com.saurasin.sbtentertainment.InitialActivity">
     
-    <Button android:layout_width="match_parent"
-            style="?android:textAppearanceSmall"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:textSize="@dimen/text_smaller"
-            android:text="@string/submit_button_text"
-            android:id="@+id/register_btn"
-            android:clickable="true"
-            android:onClick="onRegister"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="@android:color/background_light"
-            android:textStyle="bold"/>
     <ImageView android:layout_width="match_parent" 
                android:layout_height="132dp"
                android:layout_alignParentTop="true"
@@ -56,6 +44,21 @@
               android:text="@string/register_screen_instruction"
               android:layout_below="@id/phone_number_layout"
               android:layout_marginTop="@dimen/activity_horizontal_agreement_margin"
+              android:id="@+id/instruction_text"
     />
 
+    <Button android:layout_width="wrap_content"
+            style="?android:textAppearanceSmall"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/instruction_text"
+            android:layout_alignParentEnd="true"
+            android:textSize="@dimen/text_smaller"
+            android:text="@string/submit_button_text"
+            android:layout_marginTop="@dimen/activity_horizontal_agreement_margin"
+            android:layout_marginEnd="@dimen/single_padding"
+            android:id="@+id/register_btn"
+            android:clickable="true"
+            android:onClick="onRegister"
+            android:background="@drawable/rounded_blue"
+            android:textColor="@android:color/background_light"/>
 </RelativeLayout>

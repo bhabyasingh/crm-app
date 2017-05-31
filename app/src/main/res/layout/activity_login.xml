@@ -74,6 +74,7 @@
                           android:layout_height="wrap_content"
                           android:orientation="horizontal"
                           android:layout_below="@id/password_layout"
+                          android:id="@+id/location_layout"
                           android:weightSum="3"
                           android:layout_marginTop="@dimen/login_screen_spinner_margin">
                 <TextView android:layout_width="0dp"
@@ -94,20 +95,21 @@
                         android:textSize="@dimen/initial_screen_button_text_size" />
             </LinearLayout>
 
-
+            <Button
+                    android:id="@+id/email_sign_in_button"
+                    style="?android:textAppearanceButton"
+                    android:background="@drawable/rounded_blue"
+                    android:textColor="@android:color/background_light"
+                    android:layout_marginTop="@dimen/activity_horizontal_agreement_margin"
+                    android:layout_marginEnd="@dimen/single_padding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="attemptLogin"
+                    android:clickable="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/location_layout"
+                    android:text="@string/action_sign_in"
+                    android:textSize="@dimen/text_smaller"/>
         </RelativeLayout>
     </ScrollView>
-    <Button
-            android:id="@+id/email_sign_in_button"
-            style="?android:textAppearanceButton"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="@android:color/background_light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="attemptLogin"
-            android:clickable="true"
-            android:layout_alignParentBottom="true"
-            android:text="@string/action_sign_in"
-            android:textSize="@dimen/text_smaller"
-            android:textStyle="bold"/>
 </RelativeLayout>
