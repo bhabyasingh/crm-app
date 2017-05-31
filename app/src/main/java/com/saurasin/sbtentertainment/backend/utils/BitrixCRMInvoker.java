@@ -192,7 +192,7 @@ public class BitrixCRMInvoker {
                     crmId = "";
                 }
             }
-            Log.e(TAG, "Saved successfully:: " + result);
+            Log.d(TAG, "Saved successfully:: " + result);
         } catch (IOException|JSONException ex) {
             Log.e(TAG, "Error while saving user:: " + ex.getMessage());
         }

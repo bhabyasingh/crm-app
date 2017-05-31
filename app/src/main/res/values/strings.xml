@@ -55,7 +55,8 @@
     <string name="location">Location</string>
     <string-array name="location_array">
         <item>Elements - Nagawara</item>
-        <item>Inorbit - Whitefield</item>
+        <!--item>Inorbit - Whitefield</item-->
+        <item>Forum - Whitefield</item>
     </string-array>
     <string name="register_screen_instruction">Enter correct phone number for security reasons.
         Remove phone from silent mode.
