@@ -169,17 +169,24 @@ public class Entry {
                 fields.put("UF_CRM_1478418918", oneYearIndex);
             }
 
-            dob = childTwoDob.split("/");
-            formatDOB = String.format("%s/%s/%s", dob[1], dob[0], dob[2]);
-            fields.put("UF_CRM_1496121945", childTwoName);
-            fields.put("UF_CRM_1496122753", formatDOB);
-            final String twoMonthIndex = Constants.twoMonthIndexMap.get(dob[1]);
-            final String twoYearIndex = Constants.twoYearIndexMap.get(dob[2]);
-            if (twoMonthIndex != null) {
-                fields.put("UF_CRM_1496121978", twoMonthIndex);
-            }
-            if (twoYearIndex != null) {
-                fields.put("UF_CRM_1496122130", twoYearIndex);
+            if (!TextUtils.isEmpty(childTwoName)) {
+                fields.put("UF_CRM_1496121945", childTwoName);
+                if (!TextUtils.isEmpty(childTwoDob)) {
+                    dob = childTwoDob.split("/");
+                    if (dob.length == 3) {
+                        formatDOB = String.format("%s/%s/%s", dob[1], dob[0], dob[2]);
+
+                        fields.put("UF_CRM_1496122753", formatDOB);
+                        final String twoMonthIndex = Constants.twoMonthIndexMap.get(dob[1]);
+                        final String twoYearIndex = Constants.twoYearIndexMap.get(dob[2]);
+                        if (twoMonthIndex != null) {
+                            fields.put("UF_CRM_1496121978", twoMonthIndex);
+                        }
+                        if (twoYearIndex != null) {
+                            fields.put("UF_CRM_1496122130", twoYearIndex);
+                        }
+                    }
+                }
             }
             
             fields.put("UF_CRM_1467822240", bdayVenue.equals("YES") ? "Y" : "N");
