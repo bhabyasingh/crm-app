@@ -108,6 +108,6 @@
             android:clickable="true"
             android:layout_alignParentBottom="true"
             android:text="@string/action_sign_in"
-            android:textSize="@dimen/initial_screen_button_text_size"
+            android:textSize="@dimen/text_smaller"
             android:textStyle="bold"/>
 </RelativeLayout>

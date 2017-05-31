@@ -2,7 +2,6 @@
 
 package com.saurasin.sbtentertainment.backend.utils;
 
-import com.saurasin.sbtentertainment.backend.model.ChildEntry;
 import com.saurasin.sbtentertainment.backend.model.Entry;
 
 import android.util.Log;
@@ -15,7 +14,6 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 public class SmsSender {
@@ -61,12 +59,11 @@ public class SmsSender {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Welcome to Awesome Place - ");
         stringBuilder.append(entry.getName());
-        List<ChildEntry> ce =  entry.getChildren();
-        for (int i = 0; i < ce.size(); i++) {
-            stringBuilder.append(",");
-            stringBuilder.append(ce.get(i).getName());
-        }
-
+        stringBuilder.append(",");
+        stringBuilder.append(entry.getChildOneName());
+        stringBuilder.append(",");
+        stringBuilder.append(entry.getChildTwoName());
+        
         SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd.MM.yyyy 'at' HH:mm:ss");
         dateFormatter.setTimeZone(TimeZone.getDefault());
         stringBuilder.append(". Emergency - ");

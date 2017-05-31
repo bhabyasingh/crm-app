@@ -1,6 +1,5 @@
 package com.saurasin.sbtentertainment.backend.utils;
 
-import com.saurasin.sbtentertainment.backend.model.ChildEntry;
 import com.saurasin.sbtentertainment.backend.model.Entry;
 
 import android.content.ContentValues;
@@ -31,11 +30,10 @@ public class LocalDBRepository extends SQLiteOpenHelper {
     final private static String SYNCED = "synced";
     final private static String KIDS_ACT_INTEREST = "kids_activity_interest";
     final private static String EMAIL_MODIFIED = "email_modified";
-    
-    final private static String CHILDREN_TABLE_NAME = "children";
-    final private static String CHILDREN_NAME = "name";
-    final private static String CHILDREN_DOB = "dob";
-    final private static String CHILDREN_PARENT_ID = "parent_id";
+    final private static String CHILD_ONE_NAME = "child_one_name";
+    final private static String CHILD_ONE_DOB = "child_one_dob";
+    final private static String CHILD_TWO_NAME = "child_two_name";
+    final private static String CHILD_TWO_DOB = "child_two_dob";
     
     private static volatile LocalDBRepository instance;
     
@@ -54,9 +52,8 @@ public class LocalDBRepository extends SQLiteOpenHelper {
         db.execSQL("create table "  + PARENT_TABLE_NAME  +
                 " (" + PARENT_PHONE + " text primary_key," + PARENT_EMAIL + " text," + BDAY_INTEREST + " text, " +
                 KIDS_ACT_INTEREST + " text, " + PARENT_NAME +" text, " + SYNCED + " text," + EMAIL_MODIFIED + " text," 
-                + CRM_ID + " text);");
-        db.execSQL("create table children " +
-                "(name text, dob text, parent_id text);");
+                + CRM_ID + " text, " + CHILD_ONE_NAME + "  text, " + CHILD_ONE_DOB + "  text, "
+                + CHILD_TWO_NAME + "  text, " + CHILD_TWO_DOB + " text);");
     }
 
     @Override
@@ -71,19 +68,14 @@ public class LocalDBRepository extends SQLiteOpenHelper {
         cv.put(PARENT_PHONE, entry.getPhone());
         cv.put(BDAY_INTEREST, entry.getInterestInBdayVenue());
         cv.put(KIDS_ACT_INTEREST, entry.getInterestInKidsActivities());
+        cv.put(CHILD_ONE_NAME, entry.getChildOneName());
+        cv.put(CHILD_ONE_DOB, entry.getChildOneDob());        
+        cv.put(CHILD_TWO_NAME, entry.getChildTwoName());
+        cv.put(CHILD_TWO_DOB, entry.getChildTwoDob());
         cv.put(SYNCED, entry.isSynced()?"YES":"NO");
         cv.put(EMAIL_MODIFIED, entry.isEmailModified()?"YES":"NO");
         return cv;
     }
-    
-    private ContentValues getContentForChild(final ChildEntry ce, final String phone) {
-        ContentValues cv = new ContentValues();
-        cv.put(CHILDREN_PARENT_ID, phone);
-        cv.put(CHILDREN_NAME, ce.getName());
-        cv.put(CHILDREN_DOB, ce.getDOB());
-        return  cv;
-    }
-    
     
     public boolean addEntry(final Entry entry) {
         boolean result = true;
@@ -92,14 +84,6 @@ public class LocalDBRepository extends SQLiteOpenHelper {
         try {
             db.beginTransaction();
             db.insertOrThrow(PARENT_TABLE_NAME, null, cv);
-
-            List<ChildEntry> childEntries = entry.getChildren();
-            if (childEntries != null) {
-                for (ChildEntry ce : childEntries) {
-                    cv = getContentForChild(ce, entry.getPhone());
-                    db.insertOrThrow(CHILDREN_TABLE_NAME, null, cv);
-                }
-            }
             db.setTransactionSuccessful();
         } catch (SQLException ex) {
             Log.e(TAG, "Unable to persist in DB:: " + ex.getMessage());
@@ -119,18 +103,7 @@ public class LocalDBRepository extends SQLiteOpenHelper {
         try {
             db.beginTransaction();
             db.update(PARENT_TABLE_NAME, cv, PARENT_PHONE + " = ?", new String[]{entry.getPhone()});
-
-            List<ChildEntry> childEntries = entry.getChildren();
-            if (childEntries != null) {
-                for (ChildEntry ce : childEntries) {
-                    cv = getContentForChild(ce, entry.getPhone());
-                    int n = db.update(CHILDREN_TABLE_NAME, cv, CHILDREN_PARENT_ID + " = ? AND " + CHILDREN_NAME + " = ?",
-                            new String[]{entry.getPhone(), ce.getName()});
-                    if (n == 0) {
-                        db.insertOrThrow(CHILDREN_TABLE_NAME, null, cv);
-                    }
-                }
-            }
+            
             db.setTransactionSuccessful();
         } catch (SQLException ex) {
             Log.e(TAG, "Unable to persist in DB:: " + ex.getMessage());
@@ -188,7 +161,11 @@ public class LocalDBRepository extends SQLiteOpenHelper {
         String synced = null;
         String emailModified = null;
         String phone = null;
-        List<ChildEntry> children = new ArrayList<>();
+        String chOneName = null;
+        String chOneDob = null;
+        String chTwoName = null;
+        String chTwoDob = null;
+        
         if (!parentCursor.isAfterLast()) {
             crmId = parentCursor.getString(parentCursor.getColumnIndex(CRM_ID));
             parentName = parentCursor.getString(parentCursor.getColumnIndex(PARENT_NAME));
@@ -198,24 +175,16 @@ public class LocalDBRepository extends SQLiteOpenHelper {
             synced = parentCursor.getString(parentCursor.getColumnIndex(SYNCED));
             emailModified = parentCursor.getString(parentCursor.getColumnIndex(EMAIL_MODIFIED));
             phone = parentCursor.getString(parentCursor.getColumnIndex((PARENT_PHONE)));
+            chOneName = parentCursor.getString(parentCursor.getColumnIndex(CHILD_ONE_NAME));
+            chOneDob = parentCursor.getString(parentCursor.getColumnIndex(CHILD_ONE_DOB));
+            chTwoName = parentCursor.getString(parentCursor.getColumnIndex(CHILD_TWO_NAME));
+            chTwoDob = parentCursor.getString(parentCursor.getColumnIndex(CHILD_TWO_DOB));
+            
         }
-
-        Cursor childrenCursor = db.rawQuery("select * from children where parent_id=\'" + phone + "\'", null);
-        if (childrenCursor.getCount() > 0) {
-            childrenCursor.moveToFirst();
-            while (!childrenCursor.isAfterLast()) {
-                final String childName = childrenCursor.getString(childrenCursor.getColumnIndex(CHILDREN_NAME));
-                final String dob = childrenCursor.getString(childrenCursor.getColumnIndex(CHILDREN_DOB));
-                ChildEntry ce = new ChildEntry(childName, dob);
-                children.add(ce);
-                childrenCursor.moveToNext();
-            }
-        }
-        childrenCursor.close();
         
         if (parentName != null) {
             entry = new Entry(crmId, parentEmail, parentName, phone, interestInBday,
-                    interestInKidsAct, synced, emailModified, children);
+                    interestInKidsAct, synced, emailModified, chOneName, chOneDob, chTwoName, chTwoDob);
         }
         return entry;
     }

@@ -1,18 +1,19 @@
 package com.saurasin.sbtentertainment.backend.model;
 
+import com.saurasin.sbtentertainment.backend.utils.Constants;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.provider.SyncStateContract;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * Created by saurasin on 1/26/17.
@@ -28,12 +29,16 @@ public class Entry {
     private String kidsActivity;
     private String synced;
     private String emailModified;
-    private List<ChildEntry> children;
+    private String childOneName;
+    private String childOneDob;
+    private String childTwoName;
+    private String childTwoDob;
     
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ssZ");
     
     public Entry(final String i, final String e, final String n, final String p, final String bdayV, 
-                 final String kidsAct, final String s, final String eMod, final List<ChildEntry> ce) {
+                 final String kidsAct, final String s, final String eMod, final String chOneName, 
+                 final String chOneDob, final String chTwoName, final String chTwoDob) {
         id = i;
         this.email = e;
         this.name = n;
@@ -42,7 +47,10 @@ public class Entry {
         kidsActivity = kidsAct;
         synced = s;
         emailModified = eMod;
-        this.children = ce;
+        childOneName = chOneName;
+        childOneDob = chOneDob;
+        childTwoName = chTwoName;
+        childTwoDob = chTwoDob;
     }
     
     public String getId() { return id; }
@@ -60,9 +68,13 @@ public class Entry {
         return name;
     }
     
-    public List<ChildEntry> getChildren() {
-        return children;
-    }
+    public String getChildOneName() { return childOneName; }
+    
+    public String getChildOneDob() { return childOneDob; }
+    
+    public String getChildTwoName() { return childTwoName; }
+    
+    public String getChildTwoDob() { return childTwoDob; }
     
     public String getInterestInBdayVenue() {
         return bdayVenue;
@@ -71,6 +83,7 @@ public class Entry {
     public String getInterestInKidsActivities() {
         return kidsActivity;
     }
+    
     
     public boolean isSynced() {
         return "YES".equals(synced);
@@ -96,22 +109,22 @@ public class Entry {
             final String bDayYN = bdayV.equals("1")?"YES":"NO";
             final String kidsAct = entryJson.getString("UF_CRM_1467822240");
             final String kidsActYN = kidsAct.equals("1")?"YES":"NO";
-            final String childsName = entryJson.getString("UF_CRM_1467906624");
-            String childsBday = entryJson.getString("BIRTHDATE");
+            final String childOneName = entryJson.getString("UF_CRM_1467906624");
+            String childOneBday = entryJson.getString("BIRTHDATE");
+            String childTwoName = entryJson.getString("UF_CRM_1496121945");
+            String childTwoBday = entryJson.getString("UF_CRM_1496122753");
             
             try {
-                Date dt = simpleDateFormat.parse(childsBday);
-                GregorianCalendar cal = new GregorianCalendar();
-                cal.setGregorianChange(dt);
-                childsBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth()+1, 1900 + dt.getYear());
+                Date dt = simpleDateFormat.parse(childOneBday);
+                childOneBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth()+1, 1900 + dt.getYear());
+                dt = simpleDateFormat.parse(childTwoBday);
+                childTwoBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth()+1, 1900 + dt.getYear());
             } catch(ParseException ex) {
                 Log.e(TAG, "Error parsing date:: " + ex.getMessage());
             }
             
-            ChildEntry ce  = new ChildEntry(childsName, childsBday);
-            List<ChildEntry> ceList = new ArrayList<ChildEntry>();
-            ceList.add(ce);
-            return new Entry(id, email, name, phone, bDayYN, kidsActYN, "YES", "NO", ceList);
+            return new Entry(id, email, name, phone, bDayYN, kidsActYN, "YES", "NO", 
+                    childOneName, childOneBday, childTwoName, childTwoBday);
         } catch (JSONException ex) {
             Log.e(TAG, "Error occured while getting data from backend "+ ex.getMessage());
         }
@@ -119,18 +132,6 @@ public class Entry {
     }
     
     public JSONObject getEntryJson() {
-        String childName = "";
-        String birthdate = "";
-        int monthIndex = 200;
-        int yearIndex = 226;
-        if (children.size() > 0) {
-            ChildEntry ce = children.get(0);
-            childName = ce.getName();
-            String[] dob = ce.getDOB().split("/");
-            birthdate = String.format("%s/%s/%s", dob[0], dob[1], dob[2]);
-            monthIndex += Integer.parseInt(dob[1])*2;
-            yearIndex += Math.abs(Integer.parseInt(dob[2]) - 2016)*2;
-        }
         JSONObject fields = new JSONObject();
         try {
             
@@ -154,12 +155,33 @@ public class Entry {
                 fields.put("EMAIL", emails);
             }
 
-            fields.put("BIRTHDATE", birthdate);
-            fields.put("UF_CRM_1467906624", childName);
+            String[] dob = childOneDob.split("/");
+            String formatDOB = String.format("%s/%s/%s", dob[1], dob[0], dob[2]);
+            fields.put("BIRTHDATE", formatDOB);
+            fields.put("UF_CRM_1467906624", childOneName);
             
-            fields.put("UF_CRM_1478418831", monthIndex);
-            fields.put("UF_CRM_1478418918", yearIndex);
+            final String oneMonthIndex = Constants.oneMonthIndexMap.get(dob[1]);
+            final String oneYearIndex = Constants.oneYearIndexMap.get(dob[2]);
+            if (oneMonthIndex != null) {
+                fields.put("UF_CRM_1478418831", oneMonthIndex);
+            }
+            if (oneYearIndex != null) {
+                fields.put("UF_CRM_1478418918", oneYearIndex);
+            }
 
+            dob = childTwoDob.split("/");
+            formatDOB = String.format("%s/%s/%s", dob[1], dob[0], dob[2]);
+            fields.put("UF_CRM_1496121945", childTwoName);
+            fields.put("UF_CRM_1496122753", formatDOB);
+            final String twoMonthIndex = Constants.twoMonthIndexMap.get(dob[1]);
+            final String twoYearIndex = Constants.twoYearIndexMap.get(dob[2]);
+            if (twoMonthIndex != null) {
+                fields.put("UF_CRM_1496121978", twoMonthIndex);
+            }
+            if (twoYearIndex != null) {
+                fields.put("UF_CRM_1496122130", twoYearIndex);
+            }
+            
             fields.put("UF_CRM_1467822240", bdayVenue.equals("YES") ? "Y" : "N");
             fields.put("UF_CRM_1467822198", kidsActivity.equals("YES") ? "Y" : "N");
         } catch (JSONException jsonEx) {

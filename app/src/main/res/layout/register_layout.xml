@@ -10,37 +10,43 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin">
 
-    <Button android:layout_width="match_parent"
-            style="?android:textAppearanceSmall"
-            android:id="@+id/submit_button"
-            android:layout_height="wrap_content"
-            android:text="@string/submit_button_text"
-            android:clickable="true"
-            android:onClick="onSave"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="@android:color/background_light"
-            android:textSize="@dimen/initial_screen_button_text_size"
-            android:textStyle="bold"/>
+    <RelativeLayout android:layout_width="match_parent" 
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:id="@+id/button_layout"
+                  android:orientation="horizontal">
+        <Button android:layout_width="wrap_content"
+                style="?android:textAppearanceSmall"
+                android:id="@+id/submit_button"
+                android:layout_height="wrap_content"
+                android:text="@string/next_button_text"
+                android:clickable="true"
+                android:onClick="onSave"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@android:color/background_light"
+                android:textSize="@dimen/initial_screen_button_text_size"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"/>
+    
+        <Button android:layout_width="wrap_content"
+                style="?android:textAppearanceSmall"
+                android:id="@+id/cancel_button"
+                android:layout_height="wrap_content"
+                android:text="@string/back_button_text"
+                android:background="@color/dullRed"
+                android:textColor="@android:color/background_light"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:clickable="true"
+                android:onClick="onCancel"
+                android:textSize="@dimen/initial_screen_button_text_size"
+                android:layout_alignParentLeft="true"
+                android:textStyle="bold"/>
 
-    <Button android:layout_width="match_parent"
-            style="?android:textAppearanceSmall"
-            android:id="@+id/cancel_button"
-            android:layout_height="wrap_content"
-            android:text="@android:string/cancel"
-            android:background="@android:color/holo_red_dark"
-            android:textColor="@android:color/background_light"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:clickable="true"
-            android:onClick="onCancel"
-            android:layout_above="@id/submit_button"
-            android:textSize="@dimen/initial_screen_button_text_size"
-            android:textStyle="bold"/>
-
+    </RelativeLayout>
     <ScrollView android:layout_width="wrap_content" 
                 android:layout_height="match_parent"
-                android:layout_above="@id/cancel_button"
+                android:layout_above="@id/button_layout"
                 android:fillViewport="true">
         <RelativeLayout android:layout_width="match_parent" 
                         android:layout_height="wrap_content" >
@@ -145,8 +151,6 @@
                   android:focusable="false"
                   android:focusableInTouchMode="false"
                   android:onClick="onChildDOB"/>
-            
-            
             <CheckBox android:id="@+id/checkbox_bday"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -160,24 +164,25 @@
                       android:text="@string/interested_in_kids_act"
                       android:textSize="@dimen/text_smaller"
                       android:layout_below="@id/checkbox_bday"/>
-            <LinearLayout android:layout_width="match_parent" 
-                          android:layout_height="wrap_content"
-                          android:layout_below="@id/checkbox_kids_activities"
-                          android:orientation="horizontal">
-                <CheckBox android:id="@+id/checkbox_terms"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="@string/terms_and_condition_agree"
-                          android:textSize="@dimen/text_smaller"/>
-                <TextView android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:text="@string/terms_link"
-                          android:clickable="true"
-                          android:textColor="@color/colorPrimaryDark"
-                          android:onClick="onViewTerms"
-                          android:textSize="@dimen/text_smaller"
-                />
-            </LinearLayout>
+
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:textSize="@dimen/initial_screen_button_text_size"
+                      android:text="@string/terms_cond_header"
+                      android:paddingTop="@dimen/activity_vertical_agreement_margin"
+                      android:layout_below="@id/checkbox_kids_activities"
+                      android:id="@+id/agreement_header"
+                      android:textStyle="bold"/>
+            <View android:layout_width="match_parent" 
+                  android:layout_height="@dimen/line_thick"
+                  android:background="@android:color/darker_gray"
+                  android:id="@+id/agreement_separator"
+                  android:layout_below="@id/agreement_header"/>
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:textSize="@dimen/text_smaller"
+                      android:text="@string/agreement_text"
+                      android:layout_below="@id/agreement_separator"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

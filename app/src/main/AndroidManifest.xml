@@ -20,7 +20,6 @@
         <activity
                 android:name=".InitialActivity"
                 android:windowSoftInputMode="stateVisible|adjustResize"/>
-        <activity android:name=".AgreementActivity"/>
         <activity
                 android:name=".RegisterActivity"
                 android:windowSoftInputMode="stateVisible|adjustResize"/>

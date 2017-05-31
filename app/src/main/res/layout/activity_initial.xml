@@ -16,7 +16,7 @@
             style="?android:textAppearanceSmall"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:textSize="@dimen/initial_screen_button_text_size"
+            android:textSize="@dimen/text_smaller"
             android:text="@string/submit_button_text"
             android:id="@+id/register_btn"
             android:clickable="true"

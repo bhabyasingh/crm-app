@@ -8,6 +8,8 @@
     <string name="register_button_text">Register</string>
     <string name="submit_button_text">Submit</string>
     <string name="done_button_text">Done</string>
+    <string name="next_button_text">Next&gt;</string>
+    <string name="back_button_text">&lt;Back</string>
     <string name="add_child_button_text">Add Child</string>
     <string name="export_data_button_text">Export Data</string>
     <string name="import_data_button_text">Import Data</string>
@@ -74,4 +76,5 @@
         <item>December</item>
     </string-array>
     <string name="btn_start_again_txt">Start Again</string>
+    <string name="terms_cond_header">Please review the terms and condition below</string>
 </resources>
