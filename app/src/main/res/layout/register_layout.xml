@@ -112,23 +112,33 @@
                       android:textSize="@dimen/initial_screen_button_text_size"
             />
         </android.support.design.widget.TextInputLayout>
-        <EditText android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_below="@id/child_name_layout"
-                  android:hint="@string/childone_dob"
-                  android:clickable="true" 
-                  android:onClick="onChildDOB"
-                  android:focusable="false"
-                  android:focusableInTouchMode="false"
-                  android:textSize="@dimen/initial_screen_button_text_size"
-                  android:id="@+id/childone_dob"/>
+        <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/childone_dob_layout"
+                app:hintTextAppearance="@style/TextLabel"
+                android:layout_below="@id/child_name_layout">
+            <android.support.design.widget.TextInputEditText 
+                    android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/child_name_layout"
+                      android:hint="@string/childone_dob"
+                      android:clickable="true"
+                      android:onClick="onChildDOB"
+                      android:focusable="false"
+                      android:maxLines="1"
+                      android:singleLine="true"
+                      android:focusableInTouchMode="false"
+                      android:textSize="@dimen/initial_screen_button_text_size"
+                      android:id="@+id/childone_dob"/>
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/childtwo_name_layout"
             app:hintTextAppearance="@style/TextLabel"
-            android:layout_below="@id/childone_dob">
+            android:layout_below="@id/childone_dob_layout">
                 <android.support.design.widget.TextInputEditText 
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
@@ -139,36 +149,74 @@
                           android:textSize="@dimen/initial_screen_button_text_size"
                 />
         </android.support.design.widget.TextInputLayout>
-        <EditText android:layout_width="match_parent" 
-                  android:layout_height="wrap_content"
-                  android:layout_below="@id/childtwo_name_layout"
-                  android:hint="@string/childtwo_dob"
-                  android:clickable="true" 
-                  android:id="@+id/childtwo_dob"
-                  android:textSize="@dimen/initial_screen_button_text_size"
-                  android:focusable="false"
-                  android:focusableInTouchMode="false"
-                  android:onClick="onChildDOB"/>
-            <CheckBox android:id="@+id/checkbox_bday"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/interested_in_bday"
-                      android:textSize="@dimen/text_smaller"
-                      android:layout_marginTop="@dimen/activity_vertical_standard_margin"
-                      android:layout_below="@id/childtwo_dob"/>
-            <CheckBox android:id="@+id/checkbox_kids_activities"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/interested_in_kids_act"
-                      android:textSize="@dimen/text_smaller"
-                      android:layout_below="@id/checkbox_bday"/>
+
+        <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/childtwo_dob_layout"
+                app:hintTextAppearance="@style/TextLabel"
+                android:layout_below="@id/childtwo_name_layout">
+            <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/childtwo_name_layout"
+                    android:hint="@string/childtwo_dob"
+                    android:clickable="true"
+                    android:id="@+id/childtwo_dob"
+                    android:textSize="@dimen/initial_screen_button_text_size"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:onClick="onChildDOB"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout android:layout_width="match_parent" 
+                          android:layout_height="match_parent"
+                          android:id="@+id/venue_layout"
+                          android:orientation="horizontal"
+                          android:weightSum="10"
+                          android:layout_below="@id/childtwo_dob_layout"
+                          android:layout_marginTop="@dimen/activity_vertical_standard_margin">
+                <TextView android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:text="@string/interested_in_bday"
+                          android:paddingTop="@dimen/activity_vertical_agreement_margin"
+                          android:textSize="@dimen/text_smaller"
+                          android:maxLines="1"
+                          android:layout_weight="8"/>
+                <CheckBox android:id="@+id/checkbox_bday"
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="2"
+                      />
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:id="@+id/activities_layout"
+                          android:orientation="horizontal"
+                          android:weightSum="10"
+                          android:layout_below="@id/venue_layout"
+                          android:layout_marginTop="@dimen/activity_vertical_standard_margin">
+                <TextView android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:textSize="@dimen/text_smaller"
+                          android:text="@string/interested_in_kids_act"
+                          android:paddingTop="@dimen/activity_vertical_agreement_margin"
+                          android:layout_weight="8"
+                          android:maxLines="1"/>
+                <CheckBox android:id="@+id/checkbox_kids_activities"
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="2"/>
+            </LinearLayout>
 
             <TextView android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:textSize="@dimen/initial_screen_button_text_size"
                       android:text="@string/terms_cond_header"
                       android:paddingTop="@dimen/activity_vertical_agreement_margin"
-                      android:layout_below="@id/checkbox_kids_activities"
+                      android:layout_below="@id/activities_layout"
                       android:id="@+id/agreement_header"
                       android:textStyle="bold"/>
             <View android:layout_width="match_parent" 
