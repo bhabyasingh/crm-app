@@ -4,8 +4,8 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="@dimen/page_padding"
                 android:paddingRight="@dimen/page_padding"
-                android:paddingTop="@dimen/page_padding"
-                android:paddingBottom="@dimen/page_padding"
+                android:paddingTop="@dimen/page_padding_portrait"
+                android:paddingBottom="@dimen/page_padding_portrait"
                 android:background="@android:color/background_light">
 
     <ScrollView android:layout_width="wrap_content"

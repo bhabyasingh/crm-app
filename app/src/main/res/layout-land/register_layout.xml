@@ -7,8 +7,8 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="@dimen/page_padding"
                 android:paddingRight="@dimen/page_padding"
-                android:paddingTop="@dimen/page_padding"
-                android:paddingBottom="@dimen/page_padding">
+                android:paddingTop="@dimen/page_padding_portrait"
+                android:paddingBottom="@dimen/page_padding_portrait">
     
     <ScrollView android:layout_width="wrap_content" 
                 android:layout_height="match_parent"
@@ -215,6 +215,7 @@
             <RelativeLayout android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/activity_vertical_standard_margin"
+                            android:layout_marginBottom="@dimen/activity_vertical_standard_margin"
                             android:id="@+id/button_layout"
                             android:layout_below="@id/agreement_end_separator"
                             android:orientation="horizontal">
