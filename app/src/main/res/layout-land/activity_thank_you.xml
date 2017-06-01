@@ -23,6 +23,7 @@
                       android:id="@+id/thank_you_txt"/>
             <Button android:layout_width="wrap_content"
                     android:id="@+id/submit_button"
+                    android:textAllCaps="false"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_start_again_txt"
                     android:layout_below="@id/thank_you_txt"

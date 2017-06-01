@@ -58,6 +58,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/instruction_text"
                         android:layout_alignParentEnd="true"
+                        android:textAllCaps="false"
                         android:textSize="@dimen/text_smaller"
                         android:text="@string/submit_button_text"
                         android:layout_marginTop="@dimen/activity_horizontal_agreement_margin"
