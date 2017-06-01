@@ -7,6 +7,7 @@ import com.saurasin.sbtentertainment.backend.tasks.BitrixGetContactTask;
 import com.saurasin.sbtentertainment.backend.tasks.SmsSenderTask;
 import com.saurasin.sbtentertainment.backend.utils.SmsSender;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -189,6 +191,11 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     }
     
     public void onChildDOB(View v) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (this.getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        }
         final EditText dobControl = (EditText)v;
         final String date = dobControl.getEditableText().toString();
         Calendar newCalendar = Calendar.getInstance();
