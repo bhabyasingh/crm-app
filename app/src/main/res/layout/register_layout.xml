@@ -5,10 +5,10 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/page_padding"
-                android:paddingRight="@dimen/page_padding"
-                android:paddingTop="@dimen/page_padding"
-                android:paddingBottom="@dimen/page_padding">
+                android:paddingLeft="@dimen/page_padding_portrait"
+                android:paddingRight="@dimen/page_padding_portrait"
+                android:paddingTop="@dimen/page_padding_portrait"
+                android:paddingBottom="@dimen/page_padding_portrait">
 
     <RelativeLayout android:layout_width="match_parent" 
                   android:layout_height="wrap_content"
