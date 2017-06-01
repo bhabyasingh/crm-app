@@ -16,7 +16,6 @@
                   android:id="@+id/button_layout"
                   android:orientation="horizontal">
         <Button android:layout_width="wrap_content"
-                style="?android:textAppearanceSmall"
                 android:id="@+id/submit_button"
                 android:layout_height="wrap_content"
                 android:text="@string/next_button_text"
@@ -28,7 +27,6 @@
                 android:layout_alignParentEnd="true"/>
     
         <Button android:layout_width="wrap_content"
-                style="?android:textAppearanceSmall"
                 android:id="@+id/cancel_button"
                 android:layout_height="wrap_content"
                 android:text="@string/back_button_text"
@@ -60,7 +58,7 @@
                       android:hint="@string/parent_phone"
                       android:id="@+id/parentPhoneEdit"
                       android:inputType="phone"
-                      android:textSize="@dimen/initial_screen_button_text_size"
+                      android:textSize="@dimen/text_smaller"
             />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -76,7 +74,7 @@
                       android:id="@+id/parentNameEdit"
                       android:maxLines="1"
                       android:singleLine="true"
-                      android:textSize="@dimen/initial_screen_button_text_size"
+                      android:textSize="@dimen/text_smaller"
             />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -91,7 +89,7 @@
                       android:hint="@string/parent_email"
                       android:id="@+id/parentEmailEdit"
                       android:inputType="textEmailAddress"
-                      android:textSize="@dimen/initial_screen_button_text_size"
+                      android:textSize="@dimen/text_smaller"
             />
         </android.support.design.widget.TextInputLayout>
             
@@ -109,7 +107,7 @@
                       android:id="@+id/childone_name_edit"
                       android:maxLines="1"
                       android:singleLine="true"
-                      android:textSize="@dimen/initial_screen_button_text_size"
+                      android:textSize="@dimen/text_smaller"
             />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -129,7 +127,7 @@
                       android:maxLines="1"
                       android:singleLine="true"
                       android:focusableInTouchMode="false"
-                      android:textSize="@dimen/initial_screen_button_text_size"
+                      android:textSize="@dimen/text_smaller"
                       android:id="@+id/childone_dob"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -146,7 +144,7 @@
                           android:id="@+id/childtwo_name_edit"
                           android:maxLines="1"
                           android:singleLine="true"
-                          android:textSize="@dimen/initial_screen_button_text_size"
+                          android:textSize="@dimen/text_smaller"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -163,7 +161,7 @@
                     android:hint="@string/childtwo_dob"
                     android:clickable="true"
                     android:id="@+id/childtwo_dob"
-                    android:textSize="@dimen/initial_screen_button_text_size"
+                    android:textSize="@dimen/text_smaller"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:onClick="onChildDOB"
