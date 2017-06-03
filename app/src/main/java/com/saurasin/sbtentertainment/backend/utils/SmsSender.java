@@ -54,7 +54,7 @@ public class SmsSender {
            Log.e(TAG, "Error Sending SMS:: " + e.getMessage());
         }
     }
-
+    
     public static String createMessage(final Entry entry) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Welcome to Awesome Place - ");
@@ -70,7 +70,7 @@ public class SmsSender {
         stringBuilder.append(entry.getPhone());
         stringBuilder.append(". Time - ");
         stringBuilder.append(dateFormatter.format(new Date()));
-        stringBuilder.append(". Please remove phone from silent and stay alert. Thank You.");
+        stringBuilder.append(". Please remove phone from silent and receive our call if we reach out. Thank You.");
         return stringBuilder.toString();
     }
 }
