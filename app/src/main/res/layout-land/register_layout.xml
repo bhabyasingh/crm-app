@@ -4,243 +4,201 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/page_padding"
                 android:paddingRight="@dimen/page_padding"
                 android:paddingTop="@dimen/page_padding_portrait"
-                android:paddingBottom="@dimen/page_padding_portrait"
                 android:fillViewport="true"
-                android:id="@+id/register_layout">
-        <RelativeLayout android:layout_width="match_parent" 
-                        android:layout_height="wrap_content">
+                android:paddingBottom="@dimen/page_padding_portrait">
+        <LinearLayout android:layout_width="match_parent" 
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
             
-        <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/page_padding_layout_right"
-                    android:id="@+id/phone_layout"
-                    app:hintTextAppearance="@style/TextLabel">
-            <android.support.design.widget.TextInputEditText 
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:hint="@string/parent_phone"
-                      android:id="@+id/parentPhoneEdit"
-                      android:inputType="phone"
-                      android:textSize="@dimen/text_smaller"
-            />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/parent_name_layout"
-                android:layout_marginEnd="@dimen/page_padding_layout_right"
-                app:hintTextAppearance="@style/TextLabel"
-                android:layout_below="@id/phone_layout">
-            <android.support.design.widget.TextInputEditText 
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:hint="@string/parent_name"
-                      android:id="@+id/parentNameEdit"
-                      android:maxLines="1"
-                      android:singleLine="true"
-                      android:textSize="@dimen/text_smaller"
-            />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/email_layout"
-                    android:layout_marginEnd="@dimen/page_padding_layout_right"
-                    app:hintTextAppearance="@style/TextLabel"
-                    android:layout_below="@id/parent_name_layout">
-            <android.support.design.widget.TextInputEditText 
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:hint="@string/parent_email"
-                      android:id="@+id/parentEmailEdit"
-                      android:inputType="textEmailAddress"
-                      android:textSize="@dimen/text_smaller"
-            />
-        </android.support.design.widget.TextInputLayout>
-            
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/child_name_layout"
-            android:layout_marginEnd="@dimen/page_padding_layout_right"
-            app:hintTextAppearance="@style/TextLabel"
-            android:layout_below="@id/email_layout">  
-            <android.support.design.widget.TextInputEditText 
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:hint="@string/childone_name"
-                      android:id="@+id/childone_name_edit"
-                      android:maxLines="1"
-                      android:singleLine="true"
-                      android:textSize="@dimen/text_smaller"
-            />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/childone_dob_layout"
-                android:layout_marginEnd="@dimen/page_padding_layout_right"
-                app:hintTextAppearance="@style/TextLabel"
-                android:layout_below="@id/child_name_layout">
-            <android.support.design.widget.TextInputEditText 
-                    android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_below="@id/child_name_layout"
-                      android:hint="@string/childone_dob"
-                      android:clickable="true"
-                      android:onClick="onChildDOB"
-                      android:focusable="false"
-                      android:maxLines="1"
-                      android:singleLine="true"
-                      android:focusableInTouchMode="false"
-                      android:textSize="@dimen/text_smaller"
-                      android:id="@+id/childone_dob"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/childtwo_name_layout"
-            android:layout_marginEnd="@dimen/page_padding_layout_right"
-            app:hintTextAppearance="@style/TextLabel"
-            android:layout_below="@id/childone_dob_layout">
+            <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/page_padding_layout_right"
+                        android:id="@+id/phone_layout"
+                        app:hintTextAppearance="@style/TextLabel">
                 <android.support.design.widget.TextInputEditText 
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:hint="@string/childtwo_name"
-                          android:id="@+id/childtwo_name_edit"
+                          android:hint="@string/parent_phone"
+                          android:id="@+id/parentPhoneEdit"
+                          android:inputType="phone"
+                          android:textSize="@dimen/text_smaller"
+                />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/parent_name_layout"
+                    android:layout_marginEnd="@dimen/page_padding_layout_right"
+                    app:hintTextAppearance="@style/TextLabel">
+                <android.support.design.widget.TextInputEditText 
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:hint="@string/parent_name"
+                          android:id="@+id/parentNameEdit"
                           android:maxLines="1"
                           android:singleLine="true"
                           android:textSize="@dimen/text_smaller"
                 />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/email_layout"
+                        android:layout_marginEnd="@dimen/page_padding_layout_right"
+                        app:hintTextAppearance="@style/TextLabel">
+                <android.support.design.widget.TextInputEditText 
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:hint="@string/parent_email"
+                          android:id="@+id/parentEmailEdit"
+                          android:inputType="textEmailAddress"
+                          android:textSize="@dimen/text_smaller"
+                />
+            </android.support.design.widget.TextInputLayout>
+                
+    
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/childtwo_dob_layout"
+                android:id="@+id/child_name_layout"
                 android:layout_marginEnd="@dimen/page_padding_layout_right"
-                app:hintTextAppearance="@style/TextLabel"
-                android:layout_below="@id/childtwo_name_layout">
-            <android.support.design.widget.TextInputEditText
+                app:hintTextAppearance="@style/TextLabel">  
+                <android.support.design.widget.TextInputEditText 
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:hint="@string/childone_name"
+                          android:id="@+id/childone_name_edit"
+                          android:maxLines="1"
+                          android:singleLine="true"
+                          android:textSize="@dimen/text_smaller"
+                />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/childtwo_name_layout"
-                    android:hint="@string/childtwo_dob"
-                    android:clickable="true"
-                    android:id="@+id/childtwo_dob"
-                    android:textSize="@dimen/text_smaller"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:onClick="onChildDOB"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout android:layout_width="match_parent" 
-                          android:layout_height="match_parent"
-                          android:id="@+id/venue_layout"
-                          android:orientation="horizontal"
-                          android:weightSum="10"
-                          android:layout_marginEnd="@dimen/page_padding_layout_right"
-                          android:layout_below="@id/childtwo_dob_layout"
-                          android:layout_marginTop="@dimen/activity_vertical_standard_margin">
-                <TextView android:layout_width="0dp"
+                    android:id="@+id/childone_dob_layout"
+                    android:layout_marginEnd="@dimen/page_padding_layout_right"
+                    app:hintTextAppearance="@style/TextLabel">
+                <android.support.design.widget.TextInputEditText 
+                        android:layout_width="match_parent"
                           android:layout_height="wrap_content"
-                          android:text="@string/interested_in_bday"
-                          android:paddingTop="@dimen/activity_vertical_agreement_margin"
-                          android:textSize="@dimen/text_smaller"
+                          android:layout_below="@id/child_name_layout"
+                          android:hint="@string/childone_dob"
+                          android:clickable="true"
+                          android:onClick="onChildDOB"
+                          android:focusable="false"
                           android:maxLines="1"
-                          android:layout_weight="9"/>
-                <CheckBox android:id="@+id/checkbox_bday"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="1"
-                      />
-            </LinearLayout>
-            <LinearLayout android:layout_width="match_parent"
-                          android:layout_height="match_parent"
-                          android:id="@+id/activities_layout"
-                          android:orientation="horizontal"
-                          android:weightSum="10"
-                          android:layout_marginEnd="@dimen/page_padding_layout_right"
-                          android:layout_below="@id/venue_layout"
-                          android:layout_marginTop="@dimen/activity_vertical_standard_margin">
-                <TextView android:layout_width="0dp"
-                          android:layout_height="wrap_content"
+                          android:singleLine="true"
+                          android:focusableInTouchMode="false"
                           android:textSize="@dimen/text_smaller"
-                          android:text="@string/interested_in_kids_act"
-                          android:paddingTop="@dimen/activity_vertical_agreement_margin"
-                          android:layout_weight="9"
-                          android:maxLines="1"/>
-                <CheckBox android:id="@+id/checkbox_kids_activities"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="1"/>
-            </LinearLayout>
+                          android:id="@+id/childone_dob"/>
+            </android.support.design.widget.TextInputLayout>
+    
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/childtwo_name_layout"
+                android:layout_marginEnd="@dimen/page_padding_layout_right"
+                app:hintTextAppearance="@style/TextLabel">
+                    <android.support.design.widget.TextInputEditText 
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:hint="@string/childtwo_name"
+                              android:id="@+id/childtwo_name_edit"
+                              android:maxLines="1"
+                              android:singleLine="true"
+                              android:textSize="@dimen/text_smaller"
+                    />
+            </android.support.design.widget.TextInputLayout>
+    
+            <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/childtwo_dob_layout"
+                    android:layout_marginEnd="@dimen/page_padding_layout_right"
+                    app:hintTextAppearance="@style/TextLabel">
+                <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/childtwo_name_layout"
+                        android:hint="@string/childtwo_dob"
+                        android:clickable="true"
+                        android:id="@+id/childtwo_dob"
+                        android:textSize="@dimen/text_smaller"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:onClick="onChildDOB"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
 
+            <CheckBox android:id="@+id/checkbox_kids_activities"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/interested_in_bday"
+                      android:textSize="@dimen/text_smaller" />
+            <CheckBox android:id="@+id/checkbox_bday"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textSize="@dimen/text_smaller"
+                      android:text="@string/interested_in_kids_act" />
+            
             <TextView android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:textSize="@dimen/initial_screen_button_text_size"
                       android:text="@string/terms_cond_header"
                       android:paddingTop="@dimen/activity_vertical_agreement_margin"
-                      android:layout_below="@id/activities_layout"
                       android:id="@+id/agreement_header"
                       android:textStyle="bold"/>
             <View android:layout_width="match_parent" 
                   android:layout_height="@dimen/line_thick"
                   android:background="@android:color/darker_gray"
-                  android:id="@+id/agreement_separator"
-                  android:layout_below="@id/agreement_header"/>
+                  android:id="@+id/agreement_separator"/>
             <TextView android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:textSize="@dimen/text_smaller"
                       android:text="@string/agreement_text"
-                      android:layout_below="@id/agreement_separator"
                       android:id="@+id/instruction_text"/>
             <View android:layout_width="match_parent"
                   android:layout_height="@dimen/line_thick"
                   android:background="@android:color/darker_gray"
-                  android:id="@+id/agreement_end_separator"
-                  android:layout_below="@id/instruction_text"/>
-            <RelativeLayout android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/activity_vertical_standard_margin"
-                            android:layout_marginBottom="@dimen/activity_vertical_standard_margin"
-                            android:id="@+id/button_layout"
-                            android:layout_below="@id/agreement_end_separator"
-                            android:orientation="horizontal">
-                <Button android:layout_width="wrap_content"
-                        android:id="@+id/submit_button"
+                  android:id="@+id/agreement_end_separator"/>
+        <RelativeLayout android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/next_button_text"
-                        android:textAllCaps="false"
-                        android:clickable="true"
-                        android:onClick="onSave"
-                        android:background="@drawable/rounded_blue"
-                        android:textColor="@android:color/background_light"
-                        android:textSize="@dimen/text_smaller"
-                        android:layout_alignParentEnd="true"/>
+                        android:id="@+id/button_layout"
+                        android:paddingTop="@dimen/single_padding"
+                        android:paddingBottom="@dimen/single_padding"
+                        android:orientation="horizontal">
+            <Button android:layout_width="wrap_content"
+                    android:id="@+id/submit_button"
+                    android:layout_height="wrap_content"
+                    android:text="@string/next_button_text"
+                    android:textAllCaps="false"
+                    android:clickable="true"
+                    android:onClick="onSave"
+                    android:background="@drawable/rounded_blue"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="@dimen/text_smaller"
+                    android:layout_alignParentEnd="true"/>
 
-                <Button android:layout_width="wrap_content"
-                        android:id="@+id/cancel_button"
-                        android:layout_height="wrap_content"
-                        android:text="@string/back_button_text"
-                        android:textAllCaps="false"
-                        android:background="@drawable/rounded_red"
-                        android:textColor="@android:color/background_light"
-                        android:paddingTop="@dimen/activity_vertical_margin"
-                        android:paddingBottom="@dimen/activity_vertical_margin"
-                        android:clickable="true"
-                        android:onClick="onCancel"
-                        android:textSize="@dimen/text_smaller"
-                        android:layout_alignParentStart="true"/>
-            </RelativeLayout>
+            <Button android:layout_width="wrap_content"
+                    android:id="@+id/cancel_button"
+                    android:layout_height="wrap_content"
+                    android:text="@string/back_button_text"
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_red"
+                    android:textColor="@android:color/background_light"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:clickable="true"
+                    android:onClick="onCancel"
+                    android:textSize="@dimen/text_smaller"
+                    android:layout_alignParentStart="true"/>
         </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

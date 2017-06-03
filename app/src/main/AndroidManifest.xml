@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  ~
--->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.saurasin.sbtentertainment">
 
@@ -19,13 +15,13 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".InitialActivity"
-                android:windowSoftInputMode="stateVisible|adjustResize"/>
+                android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
                 android:name=".RegisterActivity"
-                android:windowSoftInputMode="stateVisible|adjustResize"/>
+                android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
                 android:name=".LoginActivity"
-                android:windowSoftInputMode="stateVisible|adjustResize">
+                android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -34,7 +30,7 @@
         </activity>
         <activity
                 android:name=".ThankYouActivity"
-                android:windowSoftInputMode="stateVisible|adjustResize" />
+                android:windowSoftInputMode="stateHidden|adjustResize" />
         <service android:name=".backend.CrmUpdater" />
     </application>
 

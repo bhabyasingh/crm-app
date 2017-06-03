@@ -21,7 +21,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -42,7 +41,6 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     private EditText childtwodobET;
     private CheckBox bdayVenueCB;
     private CheckBox kidsActivitiesCB;
-    private ScrollView scrollView;
     
     private LocalDBRepository backend;
     private String mobileNumberFromIntent;
@@ -66,8 +64,9 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         childtwonameET = (EditText) findViewById(R.id.childtwo_name_edit);
         childtwodobET  = (EditText) findViewById(R.id.childtwo_dob);
         bdayVenueCB = (CheckBox) findViewById(R.id.checkbox_bday);
+        bdayVenueCB.setChecked(true);
         kidsActivitiesCB = (CheckBox) findViewById(R.id.checkbox_kids_activities);
-        scrollView = (ScrollView) findViewById(R.id.register_layout);
+        kidsActivitiesCB.setChecked(true);
 
         backend = LocalDBRepository.getInstance(this);
         
@@ -211,9 +210,6 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 dobControl.setText(String.format("%d/%d/%d", dayOfMonth, monthOfYear+1, year));
-                scrollView.setVisibility(View.GONE);
-                scrollView.setVisibility(View.VISIBLE);
-                scrollView.requestLayout();
             }
 
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
