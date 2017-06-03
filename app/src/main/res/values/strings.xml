@@ -61,7 +61,9 @@
     <string name="register_screen_instruction">Enter correct phone number for security reasons.
         Remove phone from silent mode.
     </string>
-    <string name="thank_you_text">Thank you. Please show sms to staff and let child in.</string>
+    <string name="thank_you_text">
+        Thank you. You will now receive an sms. Please show this sms to staff who will then let the child in.
+    </string>
     <string-array name="months_array">
         <item>January</item>
         <item>February</item>

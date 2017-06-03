@@ -70,7 +70,7 @@ public class SmsSender {
         stringBuilder.append(entry.getPhone());
         stringBuilder.append(". Time - ");
         stringBuilder.append(dateFormatter.format(new Date()));
-        stringBuilder.append(". PLEASE REMOVE PHONE FROM SILENT AND STAY ALERT. THANK YOU.");
+        stringBuilder.append(". Please remove phone from silent and stay alert. Thank You.");
         return stringBuilder.toString();
     }
 }
