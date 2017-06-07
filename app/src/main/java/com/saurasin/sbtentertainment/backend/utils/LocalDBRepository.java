@@ -130,10 +130,12 @@ public class LocalDBRepository extends SQLiteOpenHelper {
     
     public List<Entry> getUnsyncedEntries() {
         List<Entry> entries = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor parentCursor =null;
         try {
-            SQLiteDatabase db = this.getReadableDatabase();
+            db = this.getReadableDatabase();
 
-            Cursor parentCursor = db.rawQuery("select * from parents where synced=\'NO\'", null);
+            parentCursor = db.rawQuery("select * from parents where synced=\'NO\'", null);
             if (parentCursor.getCount() > 0) {
                 parentCursor.moveToFirst();
                 while (!parentCursor.isAfterLast()) {
@@ -142,10 +144,16 @@ public class LocalDBRepository extends SQLiteOpenHelper {
                     parentCursor.moveToNext();
                 }
             }
-            parentCursor.close();
-            db.close();
+
         } catch (Exception ex) {
             Log.e(TAG, "Error while get entries form db:: " + ex.getMessage());
+        } finally {
+            if(parentCursor != null) {
+                parentCursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
         }
         return entries;
     }

@@ -26,7 +26,7 @@ public class CrmUpdater extends Service {
 
     private final String TAG = CrmUpdater.class.getSimpleName();
     // constant
-    public static final long NOTIFY_INTERVAL = 10 * 1000; // 10 seconds
+    public static final long NOTIFY_INTERVAL = 2 * 60 * 1000; // 2 minutes
 
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
