@@ -112,17 +112,19 @@ public class BitrixCRMInvoker {
 
         try {
             final String customerId = getIdForMobileNumber(mobileNumber);
-            final String crmContactGetQuery = String.format(BITRIX_CRM_BY_ID, token, customerId);
-            URL url = new URL(crmContactGetQuery);
-            HttpsURLConnection conn = setupHttpConnection(url);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder contactStringBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                contactStringBuilder.append(line);
+            if (customerId != null) {
+                final String crmContactGetQuery = String.format(BITRIX_CRM_BY_ID, token, customerId);
+                URL url = new URL(crmContactGetQuery);
+                HttpsURLConnection conn = setupHttpConnection(url);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder contactStringBuilder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    contactStringBuilder.append(line);
+                }
+                JSONObject contactObj = new JSONObject(contactStringBuilder.toString()).getJSONObject("result");
+                return Entry.createFromBitrixJson(contactObj);
             }
-            JSONObject contactObj = new JSONObject(contactStringBuilder.toString()).getJSONObject("result");
-            return Entry.createFromBitrixJson(contactObj);
         } catch (JSONException|IOException ex) {
                 Log.e(TAG, "Error occured while fetching contact:: " + ex.getMessage());
         }
