@@ -32,8 +32,8 @@
                         app:hintTextAppearance="@style/TextLabel"
                         android:layout_marginTop="@dimen/initial_screen_button_height"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:id="@+id/phone_number_layout"
-                        >
+                        app:hintAnimationEnabled="false"
+                        android:id="@+id/phone_number_layout">
                 <android.support.design.widget.TextInputEditText 
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
