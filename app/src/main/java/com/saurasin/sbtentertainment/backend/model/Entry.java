@@ -103,8 +103,11 @@ public class Entry {
             final String name = entryJson.getString("NAME");
             final JSONArray phoneList = entryJson.getJSONArray("PHONE");
             final String phone = ((JSONObject)phoneList.get(0)).getString("VALUE");
-            final JSONArray emailList = entryJson.getJSONArray("EMAIL");
-            final String email = ((JSONObject)emailList.get(0)).getString("VALUE");
+            String email = "";
+            if (entryJson.has("EMAIL")) {
+                final JSONArray emailList = entryJson.getJSONArray("EMAIL");
+                email = ((JSONObject) emailList.get(0)).getString("VALUE");
+            }
             final String bdayV = entryJson.getString("UF_CRM_1467822198");
             final String bDayYN = bdayV.equals("1")?"YES":"NO";
             final String kidsAct = entryJson.getString("UF_CRM_1467822240");
