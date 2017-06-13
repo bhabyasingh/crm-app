@@ -31,7 +31,6 @@
         <activity
                 android:name=".ThankYouActivity"
                 android:windowSoftInputMode="stateHidden|adjustResize" />
-        <service android:name=".backend.CrmUpdater" />
     </application>
 
 </manifest>

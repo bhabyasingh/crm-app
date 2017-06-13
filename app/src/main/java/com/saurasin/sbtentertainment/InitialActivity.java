@@ -1,6 +1,5 @@
 package com.saurasin.sbtentertainment;
 
-import com.saurasin.sbtentertainment.backend.CrmUpdater;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -33,8 +32,6 @@ public class InitialActivity extends AppCompatActivity {
                 return handled;
             }
         });
-
-        startService(new Intent(this, CrmUpdater.class));
     }
     
     public void onRegister(View v) {

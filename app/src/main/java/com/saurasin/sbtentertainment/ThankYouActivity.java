@@ -1,8 +1,12 @@
 package com.saurasin.sbtentertainment;
 
+import com.saurasin.sbtentertainment.backend.tasks.CrmUpdateTask;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import java.util.Timer;
 
 
 public class ThankYouActivity extends AppCompatActivity {
@@ -14,6 +18,8 @@ public class ThankYouActivity extends AppCompatActivity {
     }
     
     public void onSubmit(View v) {
+        Timer timer = new Timer();
+        timer.schedule(new CrmUpdateTask(getApplicationContext()), 10L);
         finish();
     }
 
