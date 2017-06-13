@@ -10,7 +10,6 @@ import java.util.Timer;
 
 
 public class ThankYouActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,8 +17,7 @@ public class ThankYouActivity extends AppCompatActivity {
     }
     
     public void onSubmit(View v) {
-        Timer timer = new Timer();
-        timer.schedule(new CrmUpdateTask(getApplicationContext()), 10L);
+        SBTEntertainment.submitTask(new CrmUpdateTask(getApplicationContext()));
         finish();
     }
 

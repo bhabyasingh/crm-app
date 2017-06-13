@@ -47,7 +47,7 @@ public class SmsSender {
             }
             wr.close();
             rd.close();
-            Log.e(TAG, sResult);
+            Log.d(TAG, sResult);
         }
         catch (Exception e)
         {
