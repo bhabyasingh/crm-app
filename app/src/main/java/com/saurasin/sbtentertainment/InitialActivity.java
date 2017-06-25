@@ -1,6 +1,8 @@
 package com.saurasin.sbtentertainment;
 
 
+import com.saurasin.sbtentertainment.backend.tasks.CrmUpdateTask;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,6 +64,12 @@ public class InitialActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         
+    }
+    
+    @Override
+    public void onResume() {
+        SBTEntertainment.submitTask(new CrmUpdateTask(getApplicationContext()));
+        super.onResume();
     }
     
     @Override

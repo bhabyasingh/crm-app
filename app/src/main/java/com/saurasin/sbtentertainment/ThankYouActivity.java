@@ -17,7 +17,6 @@ public class ThankYouActivity extends AppCompatActivity {
     }
     
     public void onSubmit(View v) {
-        SBTEntertainment.submitTask(new CrmUpdateTask(getApplicationContext()));
         finish();
     }
 

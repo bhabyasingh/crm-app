@@ -120,8 +120,14 @@ public class Entry {
             try {
                 Date dt = simpleDateFormat.parse(childOneBday);
                 childOneBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth()+1, 1900 + dt.getYear());
-                dt = simpleDateFormat.parse(childTwoBday);
-                childTwoBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth()+1, 1900 + dt.getYear());
+                if (!TextUtils.isEmpty(childTwoBday)) {
+                    try {
+                        dt = simpleDateFormat.parse(childTwoBday);
+                        childTwoBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth() + 1, 1900 + dt.getYear());
+                    } catch (ParseException pe) {
+                        Log.d(TAG, "Second child birthday not present");
+                    }
+                }
             } catch(ParseException ex) {
                 Log.e(TAG, "Error parsing date:: " + ex.getMessage());
             }
