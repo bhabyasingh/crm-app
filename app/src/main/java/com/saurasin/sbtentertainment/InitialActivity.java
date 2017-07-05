@@ -68,7 +68,11 @@ public class InitialActivity extends AppCompatActivity {
     
     @Override
     public void onResume() {
-        SBTEntertainment.submitTask(new CrmUpdateTask(getApplicationContext()));
+        if (SBTEntertainment.isTokenExpired()) {
+            finish();
+        } else {
+            SBTEntertainment.submitTask(new CrmUpdateTask(getApplicationContext()));
+        }
         super.onResume();
     }
     

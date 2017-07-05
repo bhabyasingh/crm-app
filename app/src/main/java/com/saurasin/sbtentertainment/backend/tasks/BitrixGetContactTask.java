@@ -3,8 +3,10 @@ package com.saurasin.sbtentertainment.backend.tasks;
 import com.saurasin.sbtentertainment.backend.model.Entry;
 import com.saurasin.sbtentertainment.backend.utils.BitrixCRMInvoker;
 
+import android.accounts.AuthenticatorException;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import com.saurasin.sbtentertainment.SBTEntertainment;
 
 /**
  * Created by saurasin on 5/7/17.
@@ -23,7 +25,13 @@ public class BitrixGetContactTask extends AsyncTask<String, Integer, Entry> {
     
     @Override
     protected Entry doInBackground(String... params) {
-        return BitrixCRMInvoker.getEntryFromBackend(mobileNumber);
+        Entry entry = null;
+        try {
+            entry = BitrixCRMInvoker.getEntryFromBackend(mobileNumber);
+        } catch (AuthenticatorException ex) {
+            SBTEntertainment.setTokenExpired(true);
+        }
+        return entry;
     }
 
     @Override

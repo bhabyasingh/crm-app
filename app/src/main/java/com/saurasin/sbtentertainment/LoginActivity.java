@@ -32,15 +32,14 @@ public class LoginActivity extends AppCompatActivity
     // UI references.
     private TextView mEmailView;
     private EditText mPasswordView;
-    private SharedPreferences  mPrefs;
     
     private static final String PREF_USER_EMAIL = "useremail";
     private static final String PREF_INVALID_USER_EMAIL = "Invalid";
-    private static final String PREF_LOGIN_PREFERENCES = "AuthPreferences";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SBTEntertainment.initSharedPreference(this);
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (TextView) findViewById(R.id.email);
@@ -58,11 +57,12 @@ public class LoginActivity extends AppCompatActivity
         });
         
         initializeSpinner();
-        mPrefs = getSharedPreferences(PREF_LOGIN_PREFERENCES, MODE_PRIVATE);
-        final String userEmail = mPrefs.getString(PREF_USER_EMAIL, PREF_INVALID_USER_EMAIL);
+        final String userEmail = SBTEntertainment.getSharedPreferences()
+                .getString(PREF_USER_EMAIL, PREF_INVALID_USER_EMAIL);
         if (!PREF_INVALID_USER_EMAIL.equals(userEmail)) {
             mEmailView.setText(userEmail);
         }
+        
     }
     
     private void initializeSpinner() {
@@ -109,9 +109,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     public void onTaskCompleted(Boolean result) {
         if (result) {
-            SharedPreferences.Editor prefEditor = mPrefs.edit();
-            prefEditor.putString(PREF_USER_EMAIL, mEmailView.getEditableText().toString());
-            prefEditor.apply();
+            SBTEntertainment.addStringToSharedPreferences(PREF_USER_EMAIL, mEmailView.getEditableText().toString());
             LeadConstants.getInstance().setSource("SELF");
             Intent initialIntent = new Intent(this, InitialActivity.class);
             startActivity(initialIntent);

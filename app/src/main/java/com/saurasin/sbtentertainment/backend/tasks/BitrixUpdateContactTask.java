@@ -1,8 +1,10 @@
 package com.saurasin.sbtentertainment.backend.tasks;
 
+import com.saurasin.sbtentertainment.SBTEntertainment;
 import com.saurasin.sbtentertainment.backend.model.Entry;
 import com.saurasin.sbtentertainment.backend.utils.BitrixCRMInvoker;
 
+import android.accounts.AuthenticatorException;
 import android.os.AsyncTask;
 
 /**
@@ -18,6 +20,11 @@ public class BitrixUpdateContactTask extends AsyncTask<Entry, Integer, String> {
     
     @Override
     protected String doInBackground(Entry... params) {
-        return BitrixCRMInvoker.saveEntryToBackend(entry);
+        try {
+            return BitrixCRMInvoker.saveEntryToBackend(entry);
+        } catch(AuthenticatorException ex) {
+            SBTEntertainment.setTokenExpired(true);
+        }
+        return null;
     }
 }

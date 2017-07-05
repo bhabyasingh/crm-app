@@ -188,6 +188,18 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
                 AlertDialog alert = builder.create();
                 alert.show();
             }
+        } else if (SBTEntertainment.isTokenExpired()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Token expired. Please login.")
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getText(android.R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    getParent().finish();
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
     
