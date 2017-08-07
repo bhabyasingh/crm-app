@@ -135,6 +135,15 @@
                         android:maxLines="1"
                         android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
+
+            <ImageView android:layout_width="match_parent"
+                       android:layout_height="@dimen/photo_height"
+                       android:src="@drawable/camera"
+                       android:id="@+id/parent_photo"
+                       android:clickable="true"
+                       android:onClick="onTakePicture"
+                       android:scaleType="fitCenter"
+                       android:contentDescription="@string/take_parent_photo"/>
             
             <CheckBox android:id="@+id/checkbox_kids_activities"
                       android:layout_width="wrap_content"

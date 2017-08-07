@@ -7,23 +7,41 @@ import com.saurasin.sbtentertainment.backend.tasks.BitrixGetContactTask;
 import com.saurasin.sbtentertainment.backend.tasks.SmsSenderTask;
 import com.saurasin.sbtentertainment.backend.utils.SmsSender;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by saurasin on 1/26/17.
@@ -31,6 +49,7 @@ import java.util.Calendar;
 public class RegisterActivity extends AppCompatActivity implements onTaskCompleted<Entry> {
     
     public static final String MOBILE_INTENT_EXTRA = "MOBILE_INTENT_EXTRA";
+    private final static String TAG = RegisterActivity.class.getSimpleName();
     
     private EditText phoneET;
     private EditText emailET;
@@ -41,12 +60,16 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     private EditText childtwodobET;
     private CheckBox bdayVenueCB;
     private CheckBox kidsActivitiesCB;
+    private ImageView parentPhotoIM;
     
     private LocalDBRepository backend;
     private String mobileNumberFromIntent;
     
+    private Bitmap photo;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     private final int THANK_YOU_REQUEST_CODE = 2;
-    
+
     private String emailFromBackend = "";
     private String crmId = "";
     
@@ -67,6 +90,7 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         bdayVenueCB.setChecked(true);
         kidsActivitiesCB = (CheckBox) findViewById(R.id.checkbox_kids_activities);
         kidsActivitiesCB.setChecked(true);
+        parentPhotoIM = (ImageView) findViewById(R.id.parent_photo);
 
         backend = LocalDBRepository.getInstance(this);
         
@@ -142,13 +166,14 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         SmsSenderTask task  = new SmsSenderTask(showProgressDialog("Sending sms ..."), new onTaskCompleted<Long>() {
             @Override
             public void onTaskCompleted(Long aLong) {
+                createLabel(entry);
                 Intent intent = new Intent(getApplicationContext(), ThankYouActivity.class);
                 startActivityForResult(intent, THANK_YOU_REQUEST_CODE);
             }
         });
         task.execute(entry.getPhone(), SmsSender.createMessage(entry));
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
@@ -162,6 +187,10 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == THANK_YOU_REQUEST_CODE) {
             finish();
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            photo = (Bitmap) extras.get("data");
+            parentPhotoIM.setImageBitmap(photo);
         }
     }
     
@@ -227,6 +256,65 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDlg.getDatePicker().setForegroundGravity(11);
         datePickerDlg.show();
+    }
+
+    private void createLabel(final Entry entry) {
+        Bitmap bitmap = Bitmap.createBitmap(500, 140, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        Paint paint = new Paint();
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setAntiAlias(true);
+        paint.setTextSize(12);
+
+        String msg = "Child's Name: " + entry.getChildOneName();
+        canvas.drawText(msg, 20, 30, paint);
+        msg = "Parent's Name: " + entry.getName();
+        canvas.drawText(msg, 20, 60, paint);
+        msg = "Parent's Mobile: " + entry.getPhone();
+        canvas.drawText(msg, 20, 90, paint);
+        SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        msg = "Time: " + format.format(new Date());
+        canvas.drawText(msg, 20, 120, paint);
+        if (photo != null) {
+            canvas.drawBitmap(photo, null, new RectF(300, 10, 490, 130), paint);
+        }
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+        saveBitmap(bitmap);
+    }
+
+    private void saveBitmap(final Bitmap bitmap) {
+        FileOutputStream fos = null;
+        try {
+            File f = new File(  getApplicationContext().getFilesDir(), "/temp_label.png");
+            if (f.exists()) {
+                final boolean del = f.delete();
+                if (!del) {
+                    Log.e(TAG, "Label File could not be deleted");
+                }
+            }
+            fos = new FileOutputStream(f);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (IOException ex) {
+            Log.e(TAG, "Error while printing label::" + ex.getMessage());
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.flush();
+                    fos.close();
+                }
+            } catch (IOException ex) {
+                Log.e(TAG, "Error while printing label::" + ex.getMessage());
+            }
+        }
+    }
+
+    public void onTakePicture(View v) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 }
 
