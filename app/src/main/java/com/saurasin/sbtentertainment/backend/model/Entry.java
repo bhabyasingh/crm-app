@@ -33,16 +33,17 @@ public class Entry {
     private String childOneDob;
     private String childTwoName;
     private String childTwoDob;
+    private Date lastVisited;
     
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ssZ");
+    
     
     public Entry(final String i, final String e, final String n, final String p, final String bdayV, 
                  final String kidsAct, final String s, final String eMod, final String chOneName, 
-                 final String chOneDob, final String chTwoName, final String chTwoDob) {
+                 final String chOneDob, final String chTwoName, final String chTwoDob, final Date lv) {
         id = i;
-        this.email = e;
-        this.name = n;
-        this.phone = p;
+        email = e;
+        name = n;
+        phone = p;
         bdayVenue = bdayV;
         kidsActivity = kidsAct;
         synced = s;
@@ -51,6 +52,7 @@ public class Entry {
         childOneDob = chOneDob;
         childTwoName = chTwoName;
         childTwoDob = chTwoDob;
+        lastVisited = lv;
     }
     
     public String getId() { return id; }
@@ -97,6 +99,8 @@ public class Entry {
     
     public void setEmailModified(final String emlModified) { emailModified = emlModified; }
     
+    public Date getLastVisited() { return lastVisited; }
+    
     public static Entry createFromBitrixJson(final JSONObject entryJson) {
         try {
             final String id = entryJson.getString("ID");
@@ -118,11 +122,11 @@ public class Entry {
             String childTwoBday = entryJson.getString("UF_CRM_1496122753");
             
             try {
-                Date dt = simpleDateFormat.parse(childOneBday);
+                Date dt = Constants.SIMPLE_DATA_FMT.parse(childOneBday);
                 childOneBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth()+1, 1900 + dt.getYear());
                 if (!TextUtils.isEmpty(childTwoBday)) {
                     try {
-                        dt = simpleDateFormat.parse(childTwoBday);
+                        dt = Constants.SIMPLE_DATA_FMT.parse(childTwoBday);
                         childTwoBday = String.format("%d/%d/%d", dt.getDate(), dt.getMonth() + 1, 1900 + dt.getYear());
                     } catch (ParseException pe) {
                         Log.d(TAG, "Second child birthday not present");
@@ -133,7 +137,7 @@ public class Entry {
             }
             
             return new Entry(id, email, name, phone, bDayYN, kidsActYN, "YES", "NO", 
-                    childOneName, childOneBday, childTwoName, childTwoBday);
+                    childOneName, childOneBday, childTwoName, childTwoBday, new Date());
         } catch (JSONException ex) {
             Log.e(TAG, "Error occured while getting data from backend "+ ex.getMessage());
         }

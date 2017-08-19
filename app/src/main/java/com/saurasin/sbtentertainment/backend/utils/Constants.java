@@ -1,5 +1,6 @@
 package com.saurasin.sbtentertainment.backend.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import java.util.Map;
  */
 
 public class Constants {
+
+    public static SimpleDateFormat SIMPLE_DATA_FMT = new SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ssZ");
     public static Map<String, String> oneMonthIndexMap = new HashMap<>();
     public static Map<String, String> oneYearIndexMap = new HashMap<>();
     public static Map<String, String> twoMonthIndexMap = new HashMap<>();

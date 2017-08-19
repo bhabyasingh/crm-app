@@ -81,6 +81,6 @@
     <string name="btn_start_again_txt">Start Again</string>
     <string name="terms_cond_header">Please review the terms and condition below</string>
     <string name="take_parent_photo">Take the photo of the parent</string>
-    <string name="btn_print_txt">Print Label</string>
+    <string name="btn_print_txt">Re-Print Label</string>
     <string name="entry_label_desc">The entry label</string>
 </resources>

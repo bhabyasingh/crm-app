@@ -25,6 +25,7 @@ public class ThankYouActivity extends AppCompatActivity {
             ImageView myImage = (ImageView) findViewById(R.id.entry_label);
             myImage.setImageBitmap(entryLabelBitmap);
         }
+        print();
     }
     
     public void onSubmit(View v) {
@@ -32,9 +33,13 @@ public class ThankYouActivity extends AppCompatActivity {
     }
     
     public void onPrint(View v) {
-        PrintHelper photoPrinter = new PrintHelper(this);
-        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-        photoPrinter.printBitmap("Entry Label", entryLabelBitmap);
+        print();
     }
 
+    public void print() {
+        PrintHelper photoPrinter = new PrintHelper(this);
+        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        photoPrinter.setOrientation(PrintHelper.ORIENTATION_PORTRAIT);
+        photoPrinter.printBitmap("Entry Label", entryLabelBitmap);
+    }
 }

@@ -38,6 +38,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,6 +50,7 @@ import java.util.GregorianCalendar;
 public class RegisterActivity extends AppCompatActivity implements onTaskCompleted<Entry> {
     
     public static final String MOBILE_INTENT_EXTRA = "MOBILE_INTENT_EXTRA";
+    final SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
     private final static String TAG = RegisterActivity.class.getSimpleName();
     
     private EditText phoneET;
@@ -153,7 +155,8 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
 
         Entry entry = new Entry(crmId, email, name, phone, bdayVenueCB.isChecked() ? "YES" : "NO",
                 kidsActivitiesCB.isChecked() ? "YES" : "NO", "NO",
-                !emailFromBackend.equals(email)?"YES":"NO", childonename, childonedob, childtwoname, childtwodob);
+                !emailFromBackend.equals(email)?"YES":"NO", childonename, childonedob, childtwoname, childtwodob, 
+                new Date());
         if (!TextUtils.isEmpty(crmId)) {
             backend.updateEntry(entry);
         } else {
@@ -259,31 +262,58 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     }
 
     private void createLabel(final Entry entry) {
-        Bitmap bitmap = Bitmap.createBitmap(500, 140, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(500, 170, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
         Paint paint = new Paint();
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setAntiAlias(true);
         paint.setTextSize(12);
-
-        String msg = "Child's Name: " + entry.getChildOneName();
+        
+        String msg = "Parent's Name: " + entry.getName();
         canvas.drawText(msg, 20, 30, paint);
-        msg = "Parent's Name: " + entry.getName();
-        canvas.drawText(msg, 20, 60, paint);
         msg = "Parent's Mobile: " + entry.getPhone();
-        canvas.drawText(msg, 20, 90, paint);
-        SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        canvas.drawText(msg, 20, 60, paint);
         msg = "Time: " + format.format(new Date());
-        canvas.drawText(msg, 20, 120, paint);
+        canvas.drawText(msg, 20, 90, paint);
+        int currentY = 120;
+        currentY = printChilddob(entry.getChildOneName(), entry.getChildOneDob(), currentY, paint, canvas);
+        printChilddob(entry.getChildTwoName(), entry.getChildTwoDob(), currentY, paint, canvas);
+        paint.setColor(Color.BLACK);
+
         if (photo != null) {
-            canvas.drawBitmap(photo, null, new RectF(300, 10, 490, 130), paint);
+            canvas.drawBitmap(photo, null, new RectF(300, 10, 490, 160), paint);
         }
         canvas.save(Canvas.ALL_SAVE_FLAG);
         canvas.restore();
         saveBitmap(bitmap);
     }
 
+    private int printChilddob(final String name, final String dobStr,  int currentY, Paint paint, Canvas canvas) {
+        if (!TextUtils.isEmpty(dobStr)) {
+            Calendar cal = Calendar.getInstance();
+            Calendar calNextMonth = Calendar.getInstance();
+            calNextMonth.add(Calendar.MONTH, 1);
+            String[] dates = dobStr.split("/");
+            Calendar calDOB = Calendar.getInstance();
+            calDOB.set(Calendar.MONTH, Integer.parseInt(dates[1])-1);
+            calDOB.set(Calendar.DATE, Integer.parseInt(dates[0]));
+            if (calDOB.get(Calendar.MONTH) < cal.get(Calendar.MONTH)) {
+                calDOB.add(Calendar.YEAR, 1);
+            }
+            if (cal.before(calDOB) && calNextMonth.after(calDOB)) {
+                paint.setColor(Color.RED);
+            } else {
+                paint.setColor(Color.BLACK);
+            }
+            
+            final String msg = "DOB (" + name + "): " + dobStr;
+            canvas.drawText(msg, 20, currentY, paint);
+            currentY += 30;
+        }
+        return currentY;
+    }
+    
     private void saveBitmap(final Bitmap bitmap) {
         FileOutputStream fos = null;
         try {

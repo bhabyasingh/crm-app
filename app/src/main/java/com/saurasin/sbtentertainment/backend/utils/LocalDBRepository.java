@@ -10,8 +10,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by saurasin on 1/26/17.
@@ -34,6 +38,7 @@ public class LocalDBRepository extends SQLiteOpenHelper {
     final private static String CHILD_ONE_DOB = "child_one_dob";
     final private static String CHILD_TWO_NAME = "child_two_name";
     final private static String CHILD_TWO_DOB = "child_two_dob";
+    final private static String LAST_VISITED = "last_visited";
     
     private static volatile LocalDBRepository instance;
     
@@ -45,7 +50,7 @@ public class LocalDBRepository extends SQLiteOpenHelper {
     }
     
     private LocalDBRepository(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -53,11 +58,16 @@ public class LocalDBRepository extends SQLiteOpenHelper {
                 " (" + PARENT_PHONE + " text primary_key," + PARENT_EMAIL + " text," + BDAY_INTEREST + " text, " +
                 KIDS_ACT_INTEREST + " text, " + PARENT_NAME +" text, " + SYNCED + " text," + EMAIL_MODIFIED + " text," 
                 + CRM_ID + " text, " + CHILD_ONE_NAME + "  text, " + CHILD_ONE_DOB + "  text, "
-                + CHILD_TWO_NAME + "  text, " + CHILD_TWO_DOB + " text);");
+                + CHILD_TWO_NAME + "  text, " + CHILD_TWO_DOB + " text, " 
+                + LAST_VISITED + " DATETIME);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion == 1) {
+            db.execSQL("ALTER table " + PARENT_TABLE_NAME + " ADD COLUMN " 
+                    + LAST_VISITED + " DATETIME");
+        }
     }
     
     private ContentValues getContentForParentInfo(final Entry entry) {
@@ -74,7 +84,15 @@ public class LocalDBRepository extends SQLiteOpenHelper {
         cv.put(CHILD_TWO_DOB, entry.getChildTwoDob());
         cv.put(SYNCED, entry.isSynced()?"YES":"NO");
         cv.put(EMAIL_MODIFIED, entry.isEmailModified()?"YES":"NO");
+        cv.put(LAST_VISITED, getDateTime(entry.getLastVisited()));
         return cv;
+    }
+
+    private String getDateTime(Date date) {
+        if (date == null) {
+            date = new Date();
+        }
+        return Constants.SIMPLE_DATA_FMT.format(date);
     }
     
     public boolean addEntry(final Entry entry) {
@@ -173,6 +191,7 @@ public class LocalDBRepository extends SQLiteOpenHelper {
         String chOneDob = null;
         String chTwoName = null;
         String chTwoDob = null;
+        Date lastVisited = null;
         
         if (!parentCursor.isAfterLast()) {
             crmId = parentCursor.getString(parentCursor.getColumnIndex(CRM_ID));
@@ -187,13 +206,26 @@ public class LocalDBRepository extends SQLiteOpenHelper {
             chOneDob = parentCursor.getString(parentCursor.getColumnIndex(CHILD_ONE_DOB));
             chTwoName = parentCursor.getString(parentCursor.getColumnIndex(CHILD_TWO_NAME));
             chTwoDob = parentCursor.getString(parentCursor.getColumnIndex(CHILD_TWO_DOB));
-            
+            String lastVisitedStr = parentCursor.getString(parentCursor.getColumnIndex(LAST_VISITED));
+            try {
+                lastVisited = getDateFromString(lastVisitedStr);
+            } catch (ParseException ex) {
+                Log.e(TAG, "Error parsing date from DB " + ex.getMessage());   
+            }
         }
         
         if (parentName != null) {
             entry = new Entry(crmId, parentEmail, parentName, phone, interestInBday,
-                    interestInKidsAct, synced, emailModified, chOneName, chOneDob, chTwoName, chTwoDob);
+                    interestInKidsAct, synced, emailModified, chOneName, chOneDob, chTwoName, chTwoDob, lastVisited);
         }
         return entry;
+    }
+
+    private Date getDateFromString(final String dateStr) throws ParseException {
+        if (dateStr == null) {
+            return new Date();
+        } else {
+            return Constants.SIMPLE_DATA_FMT.parse(dateStr);
+        }
     }
 }
