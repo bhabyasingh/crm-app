@@ -11,8 +11,8 @@ import android.os.AsyncTask;
  */
 
 public class SmsSenderTask extends AsyncTask<String, Integer, Long> {
-    final ProgressDialog progressDialog;
-    final onTaskCompleted<Long> completionCallback;
+    private final ProgressDialog progressDialog;
+    private final onTaskCompleted<Long> completionCallback;
     
     public SmsSenderTask(final ProgressDialog pd, final onTaskCompleted<Long> callback) {
         progressDialog = pd;
