@@ -120,6 +120,8 @@ public class Entry {
             String childOneBday = entryJson.getString("BIRTHDATE");
             String childTwoName = entryJson.getString("UF_CRM_1496121945");
             String childTwoBday = entryJson.getString("UF_CRM_1496122753");
+            String dateModifiedStr = entryJson.getString("DATE_MODIFY");
+            Date dateModified = new Date();
             
             try {
                 Date dt = Constants.SIMPLE_DATA_FMT.parse(childOneBday);
@@ -132,12 +134,13 @@ public class Entry {
                         Log.d(TAG, "Second child birthday not present");
                     }
                 }
+                dateModified =  Constants.SIMPLE_DATA_FMT_MOD.parse(dateModifiedStr);
             } catch(ParseException ex) {
                 Log.e(TAG, "Error parsing date:: " + ex.getMessage());
             }
             
             return new Entry(id, email, name, phone, bDayYN, kidsActYN, "YES", "NO", 
-                    childOneName, childOneBday, childTwoName, childTwoBday, new Date());
+                    childOneName, childOneBday, childTwoName, childTwoBday, dateModified);
         } catch (JSONException ex) {
             Log.e(TAG, "Error occured while getting data from backend "+ ex.getMessage());
         }
