@@ -57,20 +57,19 @@ public class SmsSender {
     
     public static String createMessage(final Entry entry) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Welcome to Awesome Place - ");
         stringBuilder.append(entry.getName());
         stringBuilder.append(",");
         stringBuilder.append(entry.getChildOneName());
         stringBuilder.append(",");
         stringBuilder.append(entry.getChildTwoName());
-        
-        SimpleDateFormat dateFormatter =  new SimpleDateFormat("dd.MM.yyyy 'at' HH:mm:ss");
-        dateFormatter.setTimeZone(TimeZone.getDefault());
-        stringBuilder.append(". Emergency - ");
+        stringBuilder.append("- Welcome to Awesome place. #");
         stringBuilder.append(entry.getPhone());
-        stringBuilder.append(". Time - ");
+        
+        SimpleDateFormat dateFormatter =  new SimpleDateFormat("HH:mm:ss");
+        dateFormatter.setTimeZone(TimeZone.getDefault());
+        stringBuilder.append(". Time:");
         stringBuilder.append(dateFormatter.format(new Date()));
-        stringBuilder.append(". Please remove phone from silent and receive our call if we reach out. Thank You.");
+        stringBuilder.append(". Please remove phone from silent and pick if we call. Thanks");
         return stringBuilder.toString();
     }
 }
