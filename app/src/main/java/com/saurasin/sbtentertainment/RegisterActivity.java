@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -50,7 +51,8 @@ import java.util.GregorianCalendar;
 public class RegisterActivity extends AppCompatActivity implements onTaskCompleted<Entry> {
     
     public static final String MOBILE_INTENT_EXTRA = "MOBILE_INTENT_EXTRA";
-    final SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
     private final static String TAG = RegisterActivity.class.getSimpleName();
     
     private EditText phoneET;
@@ -262,34 +264,64 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
     }
 
     private void createLabel(final Entry entry) {
-        Bitmap bitmap = Bitmap.createBitmap(500, 170, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(325, 170, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawColor(Color.WHITE);
         Paint paint = new Paint();
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setAntiAlias(true);
         paint.setTextSize(12);
-        
-        String msg = "Parent's Name: " + entry.getName();
-        canvas.drawText(msg, 20, 30, paint);
-        msg = "Parent's Mobile: " + entry.getPhone();
-        canvas.drawText(msg, 20, 60, paint);
-        msg = "Time: " + format.format(new Date());
-        canvas.drawText(msg, 20, 90, paint);
-        int currentY = 120;
-        currentY = printChilddob(entry.getChildOneName(), entry.getChildOneDob(), currentY, paint, canvas);
-        printChilddob(entry.getChildTwoName(), entry.getChildTwoDob(), currentY, paint, canvas);
-        paint.setColor(Color.BLACK);
+        canvas.drawLine(10, 0, 315, 0, paint);
+        canvas.drawLine(10, 10, 315, 10, paint);
+
+        canvas.drawLine(10, 140, 315, 140, paint);
+        canvas.drawLine(10, 160, 315, 160, paint);
+        canvas.drawLine(10, 0, 10, 160, paint);
+        canvas.drawLine(315, 0, 315, 160, paint);
+        canvas.drawLine(105, 10, 105, 140, paint);
 
         if (photo != null) {
-            canvas.drawBitmap(photo, null, new RectF(300, 10, 490, 160), paint);
+            canvas.drawBitmap(photo, null, new RectF(13, 13, 102, 137), paint);
         }
+
+        final int spacing = 20;
+        int nextY = 30;
+        canvas.drawText(entry.getName(), 115, nextY, paint);
+        nextY += spacing;
+        canvas.drawText(entry.getChildOneName(), 115, nextY, paint);
+        nextY += spacing;
+        if (!TextUtils.isEmpty(entry.getChildTwoName())) {
+            canvas.drawText(entry.getChildTwoName(), 115, nextY, paint);
+            nextY += spacing;
+        }
+
+        Date now = new Date();
+        canvas.drawText(dateFormat.format(now), 115, nextY, paint);
+        nextY += spacing;
+        canvas.drawText(timeFormat.format(now), 115, nextY, paint);
+        nextY += spacing;
+        canvas.drawText(entry.getPhone(), 115, nextY, paint);
+
+        paint.setColor(Color.BLUE);
+        canvas.drawText("http://www.awesomeplace.in", 60, 155, paint);
+        paint.setColor(Color.BLACK);
+        
+        if (childBDayWithinMonth(entry.getChildOneDob()) || childBDayWithinMonth(entry.getChildTwoDob())) {
+            drawStar(canvas, 20, 145, paint);
+        }
+        
         canvas.save(Canvas.ALL_SAVE_FLAG);
         canvas.restore();
         saveBitmap(bitmap);
     }
-
-    private int printChilddob(final String name, final String dobStr,  int currentY, Paint paint, Canvas canvas) {
+    
+    private void drawStar(Canvas canvas, int x, int y, Paint paint) {
+        Bitmap star = BitmapFactory.decodeResource(getResources(), R.drawable.blue_star);
+        canvas.drawBitmap(star, null, new RectF(x, y, x+10, y+10), paint);
+    }
+    
+    private boolean childBDayWithinMonth(final String dobStr) {
+        boolean ret = false;
         if (!TextUtils.isEmpty(dobStr)) {
             Calendar cal = Calendar.getInstance();
             Calendar calNextMonth = Calendar.getInstance();
@@ -302,18 +334,12 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
                 calDOB.add(Calendar.YEAR, 1);
             }
             if (cal.before(calDOB) && calNextMonth.after(calDOB)) {
-                paint.setColor(Color.RED);
-            } else {
-                paint.setColor(Color.BLACK);
+                ret = true;
             }
-            
-            final String msg = "DOB (" + name + "): " + dobStr;
-            canvas.drawText(msg, 20, currentY, paint);
-            currentY += 30;
         }
-        return currentY;
+        return ret;
     }
-    
+
     private void saveBitmap(final Bitmap bitmap) {
         FileOutputStream fos = null;
         try {
