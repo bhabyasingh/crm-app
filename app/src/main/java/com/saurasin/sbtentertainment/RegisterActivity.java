@@ -282,6 +282,9 @@ public class RegisterActivity extends AppCompatActivity implements onTaskComplet
 
         if (photo != null) {
             canvas.drawBitmap(photo, null, new RectF(13, 13, 102, 137), paint);
+        } else {
+            Bitmap noPhoto = BitmapFactory.decodeResource(getResources(), R.drawable.no_photo);
+            canvas.drawBitmap(noPhoto, null, new RectF(13, 13, 102, 137), paint);
         }
 
         final int spacing = 20;
